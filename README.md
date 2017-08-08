@@ -1,3 +1,5 @@
+![Download](https://api.bintray.com/packages/jiangyychn/maven/dialog/images/download.svg)
+![API](https://img.shields.io/badge/api-14%2B-brightgreen.svg)
 
 # Download
 
