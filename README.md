@@ -1,3 +1,4 @@
+
 # Download
 
 ```
@@ -5,6 +6,7 @@ dependencies {
     compile 'com.jiangyy:dialog:1.0.2'
 }
 ```
+
 # How do I use Dialog
 
 ## 通用Dialog
