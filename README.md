@@ -1,12 +1,12 @@
-#Download
+# Download
 
 ```
 dependencies {
     compile 'com.jiangyy:dialog:1.0.2'
 }
 ```
-#How do I use Dialog
-##通用Dialog
+# How do I use Dialog
+## 通用Dialog
 
 ![这里写图片描述](http://img.blog.csdn.net/20170808213610557?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
@@ -22,7 +22,7 @@ new CommonDialog.Builder(this)
                 }).setNegativeButton("取消", null).show();
 ```
 
-##底部列表单选Dialog
+## 底部列表单选Dialog
 
 ![这里写图片描述](http://img.blog.csdn.net/20170808213904553?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
@@ -39,7 +39,7 @@ new SingleChoiceDialog.Builder(this)
                 .show();
 ```
 
-##底部列表多选Dialog
+## 底部列表多选Dialog
 
 ![这里写图片描述](http://img.blog.csdn.net/20170808214043223?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
@@ -59,7 +59,7 @@ new MultipleChoiceDialog.Builder(this)
                 }).show();
 ```
 
-##输入Dialog
+## 输入Dialog
 
 ![这里写图片描述](http://img.blog.csdn.net/20170808214448788?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
@@ -76,7 +76,7 @@ new InputDialog.Builder(this)
                 }).setNegativeButton("取消", null).show();
 ```
 
-##加载Dialog
+## 加载Dialog
 
 ![这里写图片描述](http://img.blog.csdn.net/20170808214759126?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
@@ -103,7 +103,7 @@ new InputDialog.Builder(this)
         }).start();
 ```
 
-##APP更新Dialog
+## APP更新Dialog
 
 ![这里写图片描述](http://img.blog.csdn.net/20170808214851846?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
