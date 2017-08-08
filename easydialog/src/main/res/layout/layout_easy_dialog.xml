@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape1"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="title"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/dialog_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"/>
+
+    <View
+        android:id="@+id/dialog_line1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/darker_gray"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/dialog_negative"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_button1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/dialog_line2"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/dialog_positive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_button2"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

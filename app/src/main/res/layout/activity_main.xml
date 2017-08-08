@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jiangyy.sample.MainActivity">
+
+    <Button
+        android:id="@+id/dialog_common"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="commonDialog"
+        android:text="普通提示对话框"/>
+
+    <Button
+        android:id="@+id/dialog_single"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="singleDialog"
+        android:text="底部单选列表对话框"/>
+
+    <Button
+        android:id="@+id/dialog_mutile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="multipleDialog"
+        android:text="底部多选列表对话框"/>
+
+    <Button
+        android:id="@+id/dialog_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="inputDialog"
+        android:text="输入对话框"/>
+
+    <Button
+        android:id="@+id/dialog_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="loadingDialog"
+        android:text="加载对话框"/>
+
+    <Button
+        android:id="@+id/dialog_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="updateDialog"
+        android:text="APP更新对话框"/>
+
+</LinearLayout>
