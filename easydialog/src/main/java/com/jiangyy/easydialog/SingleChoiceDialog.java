@@ -51,7 +51,7 @@ public class SingleChoiceDialog {
             return this;
         }
 
-        public Builder seCancelTextColor(int color){
+        public Builder setCancelTextColor(int color){
             mViewHolder.tvCancel.setTextColor(color);
             return this;
         }
