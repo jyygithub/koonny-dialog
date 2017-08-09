@@ -1,5 +1,7 @@
+[![Download](https://api.bintray.com/packages/jiangyychn/maven/dialog/images/download.svg)](https://bintray.com/jiangyychn/maven/dialog)
+![API](https://img.shields.io/badge/api-14%2B-brightgreen.svg)
 
-# Download
+## Download
 
 ```
 dependencies {
@@ -7,11 +9,11 @@ dependencies {
 }
 ```
 
-# How do I use Dialog
+## How do I use Dialog
 
-## 通用Dialog
+### CommonDialog
 
-![这里写图片描述](http://img.blog.csdn.net/20170808213610557?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![CommonDialog](http://img.blog.csdn.net/20170808213610557?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ```
 new CommonDialog.Builder(this)
@@ -26,9 +28,9 @@ new CommonDialog.Builder(this)
 ```
 
 
-## 底部列表单选Dialog
+### SingleChoiceDialog
 
-![这里写图片描述](http://img.blog.csdn.net/20170808213904553?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![SingleChoiceDialog](http://img.blog.csdn.net/20170808213904553?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ```
 new SingleChoiceDialog.Builder(this)
@@ -43,9 +45,9 @@ new SingleChoiceDialog.Builder(this)
                 .show();
 ```
 
-## 底部列表多选Dialog
+### MultipleChoiceDialog
 
-![这里写图片描述](http://img.blog.csdn.net/20170808214043223?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![MultipleChoiceDialog](http://img.blog.csdn.net/20170808214043223?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ```
 new MultipleChoiceDialog.Builder(this)
@@ -63,9 +65,9 @@ new MultipleChoiceDialog.Builder(this)
                 }).show();
 ```
 
-## 输入Dialog
+### InputDialog
 
-![这里写图片描述](http://img.blog.csdn.net/20170808214448788?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![InputDialog](http://img.blog.csdn.net/20170808214448788?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ```
 new InputDialog.Builder(this)
@@ -80,12 +82,12 @@ new InputDialog.Builder(this)
                 }).setNegativeButton("取消", null).show();
 ```
 
-## 加载Dialog
+### LoadingDialog
 
-![这里写图片描述](http://img.blog.csdn.net/20170808214759126?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![LoadingDialog](http://img.blog.csdn.net/20170808214759126?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ```
-		final LoadingDialog.Builder mBuilder = new LoadingDialog.Builder(this);
+	final LoadingDialog.Builder mBuilder = new LoadingDialog.Builder(this);
         mBuilder.setTitle("正在加载ing...");
         mBuilder.showProgress(true).show();
 
@@ -107,9 +109,9 @@ new InputDialog.Builder(this)
         }).start();
 ```
 
-## APP更新Dialog
+### UpdateDialog
 
-![这里写图片描述](http://img.blog.csdn.net/20170808214851846?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![UpdateDialog](http://img.blog.csdn.net/20170808214851846?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 ```
 new UpdateDialog.Builder(this)
