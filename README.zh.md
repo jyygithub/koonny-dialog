@@ -4,6 +4,7 @@
 [English Document](https://github.com/jyygithub/dialog/blob/master/README.md)
 
 <img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280777.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280780.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280784.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;
+
 <img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280788.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280793.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280796.png" width = "280" height = "497" alt="图片名称" align=center />
 
 # 添加依赖
