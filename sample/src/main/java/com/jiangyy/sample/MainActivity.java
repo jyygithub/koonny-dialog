@@ -13,6 +13,8 @@ import com.jiangyy.easydialog.InputDialog;
 import com.jiangyy.easydialog.MultipleChoiceDialog;
 import com.jiangyy.easydialog.UpdateDialog;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,21 +28,22 @@ public class MainActivity extends AppCompatActivity {
     public void commonDialog(View view) {
 
         new CommonDialog.Builder(this)
-                .setTitle("标题")
-                .setMessage("这里是提示内容")
+                .setTitle("标题", R.color.colorAccent)
+                .setMessage("这里是提示内容", R.color.colorPrimary)
                 .setPositiveButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                     }
-                }).setNegativeButton("取消", null).show();
+                }, R.color.colorPrimaryDark)
+                .setNegativeButton("取消", null, R.color.colorPrimaryDark).show();
 
     }
 
     public void singleDialog(View view) {
 
         new SingleChoiceDialog.Builder(this).setTitle("提示")
-                .addList(new String[]{"1", "2", "3"})
+                .addList("古典风格")
                 .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
                     @Override
                     public void OnItemClick(String title, int position) {
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     public void updateDialog(View view) {
         new UpdateDialog.Builder(this)
                 .setIcon(R.mipmap.ic_launcher)
-                .setTitle("发现新版本，1.0.1来了")
+                .setTitle("发现新版本，1.0.2来了")
                 .setMessage("【新添】1、添加功能一；\n【修复】2、修复了好几个BUG哟\n【其他】3、你猜更新了什么", R.color.colorAccent)
                 .setPositiveButton("立即下载", new View.OnClickListener() {
                     @Override

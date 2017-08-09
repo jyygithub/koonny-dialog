@@ -1,40 +1,51 @@
-[![Download](https://api.bintray.com/packages/jiangyychn/maven/dialog/images/download.svg)](https://bintray.com/jiangyychn/maven/dialog)
-![API](https://img.shields.io/badge/api-14%2B-brightgreen.svg)
+# Dialog
 
-## Download
+[![Download](https://api.bintray.com/packages/jiangyychn/maven/dialog/images/download.svg)](https://bintray.com/jiangyychn/maven/dialog) ![API](https://img.shields.io/badge/api-14%2B-brightgreen.svg)
+
+# 添加依赖
 
 ```
 dependencies {
+	// ... other dependencies here
     compile 'com.jiangyy:dialog:1.0.2'
+    // implementation 'com.jiangyy:dialog:1.0.2'
 }
 ```
 
-## How do I use Dialog
-
-### CommonDialog
-
-![CommonDialog](http://img.blog.csdn.net/20170808213610557?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+# 通用Dailog
+下面是基础用法：
 
 ```
 new CommonDialog.Builder(this)
-                .setTitle("标题")
-                .setMessage("这里是提示内容")
-                .setPositiveButton("确定", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+		.setTitle("标题")
+		.setMessage("这里是提示内容")
+		.setPositiveButton("确定", new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
 
-                    }
-                }).setNegativeButton("取消", null).show();
+				}
+		}).setNegativeButton("取消", null).show();
 ```
-
-
-### SingleChoiceDialog
-
-![SingleChoiceDialog](http://img.blog.csdn.net/20170808213904553?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+你可以设置标题、内容、确定按钮和取消按钮的文字颜色。例如：
 
 ```
-new SingleChoiceDialog.Builder(this)
-				.setTitle("提示")
+new CommonDialog.Builder(this)
+		.setTitle("标题", R.color.colorAccent)
+        .setMessage("这里是提示内容", R.color.colorPrimary)
+        .setPositiveButton("确定", new View.OnClickListener() {
+		        @Override
+                public void onClick(View view) {
+
+                }
+        }, R.color.colorPrimaryDark)
+        .setNegativeButton("取消", null, R.color.colorPrimaryDark).show();
+```
+
+# 单选对话框
+单选对话框是从底部出现的一个列表对话框，你仅可以选择一项。当然，你依旧可以设置文字颜色。
+
+```
+new SingleChoiceDialog.Builder(this).setTitle("提示")
                 .addList(new String[]{"1", "2", "3"})
                 .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
                     @Override
@@ -44,10 +55,33 @@ new SingleChoiceDialog.Builder(this)
                 })
                 .show();
 ```
+单选对话框需要设置数据源，格式可以使数组、List或者就是一个字符串。你可以通过setOnItemClickListener方法获取到你点击的值，返回值包括值和下标。
 
-### MultipleChoiceDialog
+```
+new SingleChoiceDialog.Builder(this).setTitle("提示")
+                .addList(new ArrayList<String>())
+                .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
+                    @Override
+                    public void OnItemClick(String title, int position) {
+                        Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+```
+```
+new SingleChoiceDialog.Builder(this).setTitle("提示")
+                .addList("古典风格")
+                .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
+                    @Override
+                    public void OnItemClick(String title, int position) {
+                        Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+```
 
-![MultipleChoiceDialog](http://img.blog.csdn.net/20170808214043223?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+# 多选对话框
+多选对话框的显示风格和单选对话框相似，不过它可以选择多个，你选择后会返回一个List。
 
 ```
 new MultipleChoiceDialog.Builder(this)
@@ -65,9 +99,8 @@ new MultipleChoiceDialog.Builder(this)
                 }).show();
 ```
 
-### InputDialog
-
-![InputDialog](http://img.blog.csdn.net/20170808214448788?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+# 输入对话框
+输入对话框可以输入，获取输入的结果则是通过view.getTag().toString()获得。
 
 ```
 new InputDialog.Builder(this)
@@ -82,12 +115,17 @@ new InputDialog.Builder(this)
                 }).setNegativeButton("取消", null).show();
 ```
 
-### LoadingDialog
+# 加载对话框
 
-![LoadingDialog](http://img.blog.csdn.net/20170808214759126?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+这是基础用法：
 
 ```
-	final LoadingDialog.Builder mBuilder = new LoadingDialog.Builder(this);
+new LoadingDialog.Builder(this).setTitle("正在加载...").show();
+```
+如果你还想显示进度也可以，你可以使用showProgress()，例如：
+
+```
+final LoadingDialog.Builder mBuilder = new LoadingDialog.Builder(this);
         mBuilder.setTitle("正在加载ing...");
         mBuilder.showProgress(true).show();
 
@@ -109,10 +147,8 @@ new InputDialog.Builder(this)
         }).start();
 ```
 
-### UpdateDialog
-
-![UpdateDialog](http://img.blog.csdn.net/20170808214851846?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanlqODQ5MTE1Mjg3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
-
+# 检查更新对话框
+我们知道，现在绝大多数APP都有检查更新的功能，当检查到有新版本时，就回显示一个对话框用于显示新版本的信息。检查更新对话框就是一个好看的定制对话框，可以显示图标、标题、内容和两个按钮。使用也很简单：
 ```
 new UpdateDialog.Builder(this)
                 .setIcon(R.mipmap.ic_launcher)
@@ -125,3 +161,4 @@ new UpdateDialog.Builder(this)
                     }
                 }).setNegativeButton("以后更新", null).show();
 ```
+
