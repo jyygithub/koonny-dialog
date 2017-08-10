@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -55,21 +56,45 @@ public class OtherDialog {
             return this;
         }
 
-        public Builder setOnClickListener(int id, View.OnClickListener listener) {
-            dismiss();
-            if (listener != null) {
-                mView.findViewById(id).setOnClickListener(listener);
-            }
+        public Builder setOnClickListener(int id, final View.OnClickListener listener) {
+            mView.findViewById(id).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDialog.dismiss();
+                    if (listener != null) {
+                        listener.onClick(view);
+                    }
+                }
+            });
             return this;
         }
 
-        public Builder setOnClickListener(int id, String message, View.OnClickListener listener) {
-            dismiss();
+        public Builder setOnClickListener(int id, String message, final View.OnClickListener listener) {
             TextView textView = mView.findViewById(id);
             textView.setText(message);
-            if (listener != null) {
-                textView.setOnClickListener(listener);
-            }
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDialog.dismiss();
+                    if (listener != null) {
+                        listener.onClick(view);
+                    }
+                }
+            });
+            return this;
+        }
+
+        public Builder bundleInputListener(int editTextId, int clickViewId, final InputListener listener) {
+            final EditText editText = mView.findViewById(editTextId);
+            mView.findViewById(clickViewId).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDialog.dismiss();
+                    if (listener != null) {
+                        listener.onClick(view, editText.getText().toString());
+                    }
+                }
+            });
             return this;
         }
 
@@ -95,6 +120,10 @@ public class OtherDialog {
             return this;
         }
 
+        public View getView() {
+            return mView;
+        }
+
         public void show() {
             if (mDialog != null) {
                 mDialog.show();
@@ -107,6 +136,10 @@ public class OtherDialog {
             }
         }
 
+    }
+
+    public interface InputListener {
+        void onClick(View view, String message);
     }
 
 }

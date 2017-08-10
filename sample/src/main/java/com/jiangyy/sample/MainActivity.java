@@ -133,12 +133,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "btn1", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setOnClickListener(R.id.dialog_button2, new View.OnClickListener() {
+                .bundleInputListener(R.id.dialog_input, R.id.dialog_button2, new OtherDialog.InputListener() {
                     @Override
-                    public void onClick(View view) {
-                        Toast.makeText(MainActivity.this, "btn2", Toast.LENGTH_SHORT).show();
+                    public void onClick(View view, String message) {
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
-                }).setWidth(0.8f).show();
+                })
+                .setWidth(0.8f).show();
 
     }
 

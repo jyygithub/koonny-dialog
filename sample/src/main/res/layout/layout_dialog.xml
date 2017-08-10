@@ -22,6 +22,13 @@
         android:padding="10dp"
         android:text="@string/app_name"/>
 
+    <EditText
+        android:id="@+id/dialog_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
