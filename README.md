@@ -7,7 +7,7 @@
 
 <img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280788.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280793.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280796.png" width = "280" height = "497" alt="图片名称" align=center />
 
-# 添加依赖
+# Download
 
 ```
 dependencies {
@@ -17,8 +17,8 @@ dependencies {
 }
 ```
 
-# 通用Dailog
-下面是基础用法：
+# Common Dialog
+Here's a basic example: 
 
 ```
 new CommonDialog.Builder(this)
@@ -31,7 +31,7 @@ new CommonDialog.Builder(this)
 				}
 		}).setNegativeButton("取消", null).show();
 ```
-你可以设置标题、内容、确定按钮和取消按钮的文字颜色。例如：
+You can setting the text color of title/message/positive button/negative button. Like this:
 
 ```
 new CommonDialog.Builder(this)
@@ -46,8 +46,8 @@ new CommonDialog.Builder(this)
         .setNegativeButton("取消", null, R.color.colorPrimaryDark).show();
 ```
 
-# 单选对话框
-单选对话框是从底部出现的一个列表对话框，你仅可以选择一项。当然，你依旧可以设置文字颜色。
+# Single Choice Dialog
+SingleChoiceDialog is a menu dialog which is showing from bottom, and you can choose an item only. And you also can set text color like common dialog.
 
 ```
 new SingleChoiceDialog.Builder(this).setTitle("提示")
@@ -60,7 +60,7 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
                 })
                 .show();
 ```
-单选对话框需要设置数据源，格式可以使数组、List或者就是一个字符串。你可以通过setOnItemClickListener方法获取到你点击的值，返回值包括值和下标。
+This dialog should bundle datas, which can be an array、a list or a string. Then if you choose an item, you can use "setOnItemClickListener" method to get value which include item's value and position. 
 
 ```
 new SingleChoiceDialog.Builder(this).setTitle("提示")
@@ -85,8 +85,8 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
                 .show();
 ```
 
-# 多选对话框
-多选对话框的显示风格和单选对话框相似，不过它可以选择多个，你选择后会返回一个List。
+# Multiple Choice Dialog
+MultipleChoiceDialog's style is like SingleChoiceDialog, but it can choose multiple items. You can get an array after you choose.
 
 ```
 new MultipleChoiceDialog.Builder(this)
@@ -104,8 +104,8 @@ new MultipleChoiceDialog.Builder(this)
                 }).show();
 ```
 
-# 输入对话框
-输入对话框可以输入，获取输入的结果则是通过view.getTag().toString()获得。
+# Input Dialog
+InputDialog is a dialog which is can input, and you can get the result from view.getTag().toString()
 
 ```
 new InputDialog.Builder(this)
@@ -120,14 +120,14 @@ new InputDialog.Builder(this)
                 }).setNegativeButton("取消", null).show();
 ```
 
-# 加载对话框
+# Loading Dialog
 
-这是基础用法：
+This is a basic usage:
 
 ```
 new LoadingDialog.Builder(this).setTitle("正在加载...").show();
 ```
-如果你还想显示进度也可以，你可以使用showProgress()，例如：
+If you want to show progress in this dialog, you can use "showProgress()" like this:
 
 ```
 final LoadingDialog.Builder mBuilder = new LoadingDialog.Builder(this);
@@ -152,8 +152,9 @@ final LoadingDialog.Builder mBuilder = new LoadingDialog.Builder(this);
         }).start();
 ```
 
-# 检查更新对话框
-我们知道，现在绝大多数APP都有检查更新的功能，当检查到有新版本时，就回显示一个对话框用于显示新版本的信息。检查更新对话框就是一个好看的定制对话框，可以显示图标、标题、内容和两个按钮。使用也很简单：
+# Update Dialog
+We know most APP check from update, and show dialog when id have a new version. UpdateDialog is a beautiful dialog to show it, and you can show icon、title、message and two button in it. The usage is easy:
+
 ```
 new UpdateDialog.Builder(this)
                 .setIcon(R.mipmap.ic_launcher)
