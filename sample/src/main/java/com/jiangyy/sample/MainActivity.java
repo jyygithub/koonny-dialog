@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.jiangyy.easydialog.CommonDialog;
 import com.jiangyy.easydialog.LoadingDialog;
+import com.jiangyy.easydialog.OtherDialog;
 import com.jiangyy.easydialog.SingleChoiceDialog;
 import com.jiangyy.easydialog.InputDialog;
 import com.jiangyy.easydialog.MultipleChoiceDialog;
@@ -120,5 +121,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void otherDialog(View view) {
+
+        new OtherDialog.Builder(this)
+                .setContentView(R.layout.layout_dialog)
+                .setText(R.id.dialog_title, "This is title")
+                .setText(R.id.dialog_message, "This is message")
+                .setOnClickListener(R.id.dialog_button1, "ABC", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this, "btn1", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setOnClickListener(R.id.dialog_button2, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this, "btn2", Toast.LENGTH_SHORT).show();
+                    }
+                }).setWidth(0.8f).show();
+
+    }
 
 }

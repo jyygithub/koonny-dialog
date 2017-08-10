@@ -50,4 +50,11 @@
         android:onClick="updateDialog"
         android:text="APP更新对话框"/>
 
+    <Button
+        android:id="@+id/dialog_other"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="otherDialog"
+        android:text="自定义对话框"/>
+
 </LinearLayout>
