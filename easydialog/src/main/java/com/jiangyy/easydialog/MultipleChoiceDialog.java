@@ -54,12 +54,6 @@ public class MultipleChoiceDialog {
             return this;
         }
 
-        public Builder setBackgroundResource(int resid) {
-            mViewHolder.linearLayout.setBackgroundResource(resid);
-            mViewHolder.tvCancel.setBackgroundResource(resid);
-            return this;
-        }
-
         public Builder setChoiceIcon(@DrawableRes int resid) {
             mAdapter.setChoiceIcon(resid);
             return this;

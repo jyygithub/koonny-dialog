@@ -53,12 +53,6 @@ public class SingleChoiceDialog {
             return this;
         }
 
-        public Builder setBackgroundResource(int resid) {
-            mViewHolder.linearLayout.setBackgroundResource(resid);
-            mViewHolder.tvCancel.setBackgroundResource(resid);
-            return this;
-        }
-
         public Builder setCancelTextColor(int color) {
             mViewHolder.tvCancel.setTextColor(color);
             return this;

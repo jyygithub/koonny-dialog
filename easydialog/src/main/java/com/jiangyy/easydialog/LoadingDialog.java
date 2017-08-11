@@ -56,11 +56,6 @@ public class LoadingDialog {
             return this;
         }
 
-        public Builder setBackgroundResource(int resid) {
-            mViewHolder.linearLayout.setBackgroundResource(resid);
-            return this;
-        }
-
         public Builder setCancelable(boolean flag) {
             mDialog.setCancelable(flag);
             return this;
