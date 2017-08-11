@@ -167,4 +167,40 @@ new UpdateDialog.Builder(this)
                     }
                 }).setNegativeButton("以后更新", null).show();
 ```
+# Other Dialog
+if you want to custom dialog using your layout, OtherDialog is a good choice. This is a example:
 
+```
+new OtherDialog.Builder(this)
+                .setGravity(Gravity.BOTTOM)
+                .setContentView(R.layout.layout_dialog)
+                .setText(R.id.dialog_title, "This is title")
+                .setText(R.id.dialog_message, "This is message")
+                .setOnClickListener(R.id.dialog_button1, "ABC", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this, "btn1", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .bundleInputListener(R.id.dialog_input, R.id.dialog_button2, new OtherDialog.InputListener() {
+                    @Override
+                    public void onClick(View view, String message) {
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setWidth(0.8f).show();
+```
+In OtherDialog, you should create a xml first, and then use setContentView to bundle with dialog, and now you can use all views in your custom layout.
+| Method                      | Usage                                |Parameter Example
+|:-------------               |:-------------                        |:-------------
+| setContentView              | bundle the layout to dialog          |setContentView(R.layout.layout_dialog)
+| setText                     | set text                             |setText(R.id.dialog_title, "This is title")
+| setOnClickListener          | set click event                      |setOnClickListener(R.id.dialog_button1, "ABC", listener
+| setAdapter                  | set adapter to AdapterView           |setAdapter(R.id.listview,adapter)
+| setOnItemClickListener      | set item click event to AdapterView  |setOnItemClickListener(R.id.listview,listener)
+| bundleInputListener         | get input after view click           |bundleInputListener(R.id.dialog_input, R.id.dialog_button2, listener)
+| setWidth                    | set dialog's width（Relative to the width of the screen）                   |setWidth(0.8f) ：80% of screen width
+| setHeight                   |set dialog's height（Relative to the height of the screen）      |setHheight(0.8f) ：80% of screen height
+| setGravity                  | Relative to the gravity of the screen  |setGravity(Gravity.BOTTOM)
+| setCanceledOnTouchOutside   |  |
+| setCancelable               |  |

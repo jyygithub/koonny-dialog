@@ -12,8 +12,8 @@
 ```
 dependencies {
 	// ... other dependencies here
-    compile 'com.jiangyy:dialog:1.0.2'
-    // implementation 'com.jiangyy:dialog:1.0.2'
+    compile 'com.jiangyy:dialog:1.0.3'
+    // implementation 'com.jiangyy:dialog:1.0.3'
 }
 ```
 
@@ -167,3 +167,41 @@ new UpdateDialog.Builder(this)
                 }).setNegativeButton("以后更新", null).show();
 ```
 
+# 自定义对话框
+如果上面的对话框不能满足您的需求，你可以使用自定义对话框。下面是个例子：
+
+```
+new OtherDialog.Builder(this)
+                .setGravity(Gravity.BOTTOM)
+                .setContentView(R.layout.layout_dialog)
+                .setText(R.id.dialog_title, "This is title")
+                .setText(R.id.dialog_message, "This is message")
+                .setOnClickListener(R.id.dialog_button1, "ABC", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this, "btn1", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .bundleInputListener(R.id.dialog_input, R.id.dialog_button2, new OtherDialog.InputListener() {
+                    @Override
+                    public void onClick(View view, String message) {
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setWidth(0.8f).show();
+```
+
+In OtherDialog, you should create a xml first, and then use setContentView to bundle with dialog, and now you can use all views in your custom layout.
+| 方法| 用法|传参例子
+|:-------------               |:-------------                        |:-------------
+| setContentView              | 给对话框绑定布局文件          |setContentView(R.layout.layout_dialog)
+| setText                     | 设置文本                           |setText(R.id.dialog_title, "This is title")
+| setOnClickListener          | 设置点击事件                      |setOnClickListener(R.id.dialog_button1, "ABC", listener
+| setAdapter                  | 设置适配器           |setAdapter(R.id.listview,adapter)
+| setOnItemClickListener      | 设置Item点击  |setOnItemClickListener(R.id.listview,listener)
+| bundleInputListener         | 当View点击后获取某个输入框的值           |bundleInputListener(R.id.dialog_input, R.id.dialog_button2, listener)
+| setWidth                    | 设置对话框的宽度（屏幕宽度的百分之几）                |setWidth(0.8f) ：80% of screen width
+| setHeight                   |设置对话框高度（屏幕高度的百分之几）      |setHheight(0.8f) ：80% of screen height
+| setGravity                  | 设置对话框的相对位置  |setGravity(Gravity.BOTTOM)
+| setCanceledOnTouchOutside   |  |
+| setCancelable               |  |
