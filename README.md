@@ -191,6 +191,7 @@ new OtherDialog.Builder(this)
                 .setWidth(0.8f).show();
 ```
 In OtherDialog, you should create a xml first, and then use setContentView to bundle with dialog, and now you can use all views in your custom layout.
+
 | Method                      | Usage                                |Parameter Example
 |:-------------               |:-------------                        |:-------------
 | setContentView              | bundle the layout to dialog          |setContentView(R.layout.layout_dialog)
