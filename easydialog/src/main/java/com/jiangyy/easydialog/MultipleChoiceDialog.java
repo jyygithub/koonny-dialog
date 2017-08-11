@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -50,6 +51,12 @@ public class MultipleChoiceDialog {
         public Builder setTitle(CharSequence title, int color) {
             mViewHolder.tvTitle.setText(title);
             mViewHolder.tvTitle.setTextColor(ContextCompat.getColor(mContext, color));
+            return this;
+        }
+
+        public Builder setBackgroundResource(int resid) {
+            mViewHolder.linearLayout.setBackgroundResource(resid);
+            mViewHolder.tvCancel.setBackgroundResource(resid);
             return this;
         }
 
@@ -149,12 +156,14 @@ public class MultipleChoiceDialog {
             TextView tvTitle;
             ListView lvListView;
             TextView tvCancel;
+            LinearLayout linearLayout;
 
             public ViewHolder(View view) {
 
                 tvTitle = view.findViewById(R.id.dialog_title);
                 tvCancel = view.findViewById(R.id.dialog_cancel);
                 lvListView = view.findViewById(R.id.dialog_list);
+                linearLayout = view.findViewById(R.id.dialog_layout);
 
 
             }

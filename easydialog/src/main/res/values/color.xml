@@ -2,5 +2,6 @@
 <resources>
 
     <color name="common_bg_color">#F2F2FD</color>
+    <color name="press_btn_color">#ddd</color>
 
 </resources>

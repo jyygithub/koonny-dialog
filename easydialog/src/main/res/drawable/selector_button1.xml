@@ -4,8 +4,8 @@
     <item android:state_pressed="true">
         <shape>
             <corners android:bottomLeftRadius="10dp"/>
-            <stroke android:color="@color/common_bg_color"/>
-            <solid android:color="@color/common_bg_color"/>
+            <stroke android:color="@color/press_btn_color"/>
+            <solid android:color="@color/press_btn_color"/>
         </shape>
     </item>
     <item>

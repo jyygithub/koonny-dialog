@@ -56,6 +56,11 @@ public class LoadingDialog {
             return this;
         }
 
+        public Builder setBackgroundResource(int resid) {
+            mViewHolder.linearLayout.setBackgroundResource(resid);
+            return this;
+        }
+
         public Builder setCancelable(boolean flag) {
             mDialog.setCancelable(flag);
             return this;
@@ -121,11 +126,13 @@ public class LoadingDialog {
             TextView tvTitle;
             TextView progressNum;
             ProgressBar progressBar;
+            LinearLayout linearLayout;
 
             public ViewHolder(View view) {
                 tvTitle = view.findViewById(R.id.dialog_title);
                 progressBar = view.findViewById(R.id.progress_bar);
                 progressNum = view.findViewById(R.id.progress_num);
+                linearLayout = view.findViewById(R.id.dialog_layout);
             }
         }
 

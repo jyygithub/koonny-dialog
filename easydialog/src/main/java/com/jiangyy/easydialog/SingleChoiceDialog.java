@@ -2,6 +2,7 @@ package com.jiangyy.easydialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,7 +53,13 @@ public class SingleChoiceDialog {
             return this;
         }
 
-        public Builder setCancelTextColor(int color){
+        public Builder setBackgroundResource(int resid) {
+            mViewHolder.linearLayout.setBackgroundResource(resid);
+            mViewHolder.tvCancel.setBackgroundResource(resid);
+            return this;
+        }
+
+        public Builder setCancelTextColor(int color) {
             mViewHolder.tvCancel.setTextColor(color);
             return this;
         }
@@ -136,13 +144,14 @@ public class SingleChoiceDialog {
             TextView tvTitle;
             ListView lvListView;
             TextView tvCancel;
+            LinearLayout linearLayout;
 
             public ViewHolder(View view) {
 
                 tvTitle = view.findViewById(R.id.dialog_title);
                 tvCancel = view.findViewById(R.id.dialog_cancel);
                 lvListView = view.findViewById(R.id.dialog_list);
-
+                linearLayout = view.findViewById(R.id.dialog_layout);
 
             }
         }
