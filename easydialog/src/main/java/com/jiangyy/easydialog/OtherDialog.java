@@ -2,12 +2,16 @@ package com.jiangyy.easydialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -50,13 +54,13 @@ public class OtherDialog {
             return this;
         }
 
-        public Builder setText(int id, String message) {
+        public Builder setText(@IdRes int id, String message) {
             TextView textView = mView.findViewById(id);
             textView.setText(message);
             return this;
         }
 
-        public Builder setOnClickListener(int id, final View.OnClickListener listener) {
+        public Builder setOnClickListener(@IdRes int id, final View.OnClickListener listener) {
             mView.findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -69,7 +73,27 @@ public class OtherDialog {
             return this;
         }
 
-        public Builder setOnClickListener(int id, String message, final View.OnClickListener listener) {
+        public Builder setAdapter(@IdRes int id, Adapter adapter) {
+            AdapterView view = mView.findViewById(id);
+            view.setAdapter(adapter);
+            return this;
+        }
+
+        public Builder setOnItemClickListener(@IdRes int id, final AdapterView.OnItemClickListener listener) {
+            AdapterView view = mView.findViewById(id);
+            view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    dismiss();
+                    if (listener != null) {
+                        listener.onItemClick(adapterView, view, i, l);
+                    }
+                }
+            });
+            return this;
+        }
+
+        public Builder setOnClickListener(@IdRes int id, String message, final View.OnClickListener listener) {
             TextView textView = mView.findViewById(id);
             textView.setText(message);
             textView.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +108,7 @@ public class OtherDialog {
             return this;
         }
 
-        public Builder bundleInputListener(int editTextId, int clickViewId, final InputListener listener) {
+        public Builder bundleInputListener(@IdRes int editTextId, @IdRes int clickViewId, final InputListener listener) {
             final EditText editText = mView.findViewById(editTextId);
             mView.findViewById(clickViewId).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,6 +131,11 @@ public class OtherDialog {
         public Builder setHeight(float height) {
             mParams.height = (int) (mDisplayMetrics.heightPixels * height);
             mDialog.getWindow().setAttributes(mParams);
+            return this;
+        }
+
+        public Builder setGravity(int gravity) {
+            mDialog.getWindow().setGravity(gravity);
             return this;
         }
 

@@ -2,6 +2,7 @@ package com.jiangyy.easydialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -49,6 +50,11 @@ public class MultipleChoiceDialog {
         public Builder setTitle(CharSequence title, int color) {
             mViewHolder.tvTitle.setText(title);
             mViewHolder.tvTitle.setTextColor(ContextCompat.getColor(mContext, color));
+            return this;
+        }
+
+        public Builder setChoiceIcon(@DrawableRes int resid) {
+            mAdapter.setChoiceIcon(resid);
             return this;
         }
 
@@ -165,6 +171,7 @@ public class MultipleChoiceDialog {
         private Context mContext;
         private List<String> mList;
         private List<Boolean> mBooleanList;
+        private int mChoiceIcon = R.drawable.ic_yes;
 
         public ListAdapter(Context context) {
             mContext = context;
@@ -176,6 +183,11 @@ public class MultipleChoiceDialog {
             mContext = context;
             mList = list;
             mBooleanList = new ArrayList<>();
+        }
+
+        public void setChoiceIcon(int resid) {
+            mChoiceIcon = resid;
+            this.notifyDataSetChanged();
         }
 
         public void setNewData(List<String> list) {
@@ -240,6 +252,7 @@ public class MultipleChoiceDialog {
                 viewHolder = (ListAdapter.ViewHolder) view.getTag();
             }
             viewHolder.mView.setText(mList.get(i));
+            viewHolder.tvChoice.setBackgroundResource(mChoiceIcon);
             if (mBooleanList.get(i)) {
                 viewHolder.tvChoice.setVisibility(View.VISIBLE);
             } else {

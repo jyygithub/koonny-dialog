@@ -3,6 +3,7 @@ package com.jiangyy.sample;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
     public void otherDialog(View view) {
 
         new OtherDialog.Builder(this)
+                .setGravity(Gravity.BOTTOM)
                 .setContentView(R.layout.layout_dialog)
                 .setText(R.id.dialog_title, "This is title")
                 .setText(R.id.dialog_message, "This is message")

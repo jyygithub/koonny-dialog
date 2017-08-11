@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 26
@@ -25,4 +26,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.+'
+}
+
+publish {
+    userOrg = 'jiangyychn'
+    groupId = 'com.jiangyy'
+    artifactId = 'dialog'
+    publishVersion = '1.0.3'
+    desc = 'This is a dialog library'
+    website = 'https://github.com/jyygithub/dialog'
 }
