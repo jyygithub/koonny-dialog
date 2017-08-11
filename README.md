@@ -12,8 +12,8 @@
 ```
 dependencies {
 	// ... other dependencies here
-    compile 'com.jiangyy:dialog:1.0.2'
-    // implementation 'com.jiangyy:dialog:1.0.2'
+    compile 'com.jiangyy:dialog:1.0.3'
+    // implementation 'com.jiangyy:dialog:1.0.3'
 }
 ```
 
