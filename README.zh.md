@@ -3,9 +3,11 @@
 
 [English Document](https://github.com/jyygithub/dialog/blob/master/README.md)
 
-<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280777.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280780.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280784.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;
+<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot1.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot2.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot3.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;
 
-<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280788.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280793.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280796.png" width = "280" height = "497" alt="图片名称" align=center />
+<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot4.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot5.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot6.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;
+
+<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot7.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot8.png" width = "280" height = "497" alt="图片名称" align=center />
 
 # 添加依赖
 
