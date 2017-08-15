@@ -1,6 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
+task javadoc(type: Javadoc) {
+    options.encoding "UTF-8"
+    options.charSet 'UTF-8'
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
@@ -32,7 +37,7 @@ publish {
     userOrg = 'jiangyychn'
     groupId = 'com.jiangyy'
     artifactId = 'dialog'
-    publishVersion = '1.0.3'
+    publishVersion = '1.0.4'
     desc = 'This is a dialog library'
     website = 'https://github.com/jyygithub/dialog'
 }

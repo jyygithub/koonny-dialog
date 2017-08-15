@@ -62,7 +62,13 @@ public class MainActivity extends AppCompatActivity {
     public void multipleDialog(View view) {
         new MultipleChoiceDialog.Builder(this).setTitle("提示")
                 .addList(new String[]{"1", "2", "3"})
-                .setMaxChoice(1)
+                .setMaxChoice(2)
+                .setExceedsListener(new MultipleChoiceDialog.ExceedsListener() {
+                    @Override
+                    public void show() {
+                        Toast.makeText(MainActivity.this, "选多啦！！！", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .addListener(new MultipleChoiceDialog.ClickListener() {
                     @Override
                     public void OnFinishClick(List<String> data, List<Integer> data0) {

@@ -39,6 +39,7 @@ public class MultipleChoiceDialog {
         private DisplayMetrics dm;
         private WindowManager windowManager;
         private int mMaxCount = -1;
+        private ExceedsListener mExceedsListener;
 
         public Builder(Context context) {
             mContext = context;
@@ -87,6 +88,11 @@ public class MultipleChoiceDialog {
             return this;
         }
 
+        public Builder setExceedsListener(ExceedsListener listener) {
+            mExceedsListener = listener;
+            return this;
+        }
+
         public Builder addListener(final ClickListener onItemClickListener) {
             mViewHolder.lvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -101,7 +107,11 @@ public class MultipleChoiceDialog {
                             }
                         }
                         if (c == mMaxCount) {
-                            Toast.makeText(mContext, "超过最多数量", Toast.LENGTH_SHORT).show();
+                            if (mExceedsListener != null) {
+                                mExceedsListener.show();
+                            } else {
+                                Toast.makeText(mContext, "选择数量超过限制", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             mAdapter.setData(i, !mAdapter.getBooleanList().get(i));
                         }
@@ -188,6 +198,10 @@ public class MultipleChoiceDialog {
 
     public interface ClickListener {
         void OnFinishClick(List<String> data, List<Integer> data0);
+    }
+
+    public interface ExceedsListener {
+        void show();
     }
 
     private static class ListAdapter extends BaseAdapter {

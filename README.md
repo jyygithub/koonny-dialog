@@ -1,7 +1,7 @@
 # Dialog
 [![Download](https://api.bintray.com/packages/jiangyychn/maven/dialog/images/download.svg)](https://bintray.com/jiangyychn/maven/dialog) ![API](https://img.shields.io/badge/api-14%2B-brightgreen.svg)
 
-[中文版](https://github.com/jyygithub/dialog/blob/master/README.zh.md)
+[English Document](https://github.com/jyygithub/dialog/blob/master/README.md)
 
 <img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280777.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280780.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;<img src="https://github.com/jyygithub/dialog/blob/master/image/screenshot_1502280784.png" width = "280" height = "497" alt="图片名称" align=center />&ensp;
 
@@ -12,13 +12,13 @@
 ```
 dependencies {
 	// ... other dependencies here
-    compile 'com.jiangyy:dialog:1.0.3'
-    // implementation 'com.jiangyy:dialog:1.0.3'
+    compile 'com.jiangyy:dialog:1.0.4'
+    // implementation 'com.jiangyy:dialog:1.0.4'
 }
 ```
 
 # Common Dialog
-Here's a basic example: 
+Here's a basic example:
 
 ```
 new CommonDialog.Builder(this)
@@ -60,7 +60,7 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
                 })
                 .show();
 ```
-This dialog should bundle datas, which can be an array、a list or a string. Then if you choose an item, you can use "setOnItemClickListener" method to get value which include item's value and position. 
+This dialog should bundle datas, which can be an array、a list or a string. Then if you choose an item, you can use "setOnItemClickListener" method to get value which include item's value and position.
 
 ```
 new SingleChoiceDialog.Builder(this).setTitle("提示")
@@ -89,9 +89,15 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
 MultipleChoiceDialog's style is like SingleChoiceDialog, but it can choose multiple items. You can get an array after you choose.
 
 ```
-new MultipleChoiceDialog.Builder(this)
-				.setTitle("提示")
+ new MultipleChoiceDialog.Builder(this).setTitle("提示")
                 .addList(new String[]{"1", "2", "3"})
+                .setMaxChoice(2)
+                .setExceedsListener(new MultipleChoiceDialog.ExceedsListener() {
+                    @Override
+                    public void show() {
+                        Toast.makeText(MainActivity.this, "选多啦！！！", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .addListener(new MultipleChoiceDialog.ClickListener() {
                     @Override
                     public void OnFinishClick(List<String> data, List<Integer> data0) {
@@ -190,12 +196,33 @@ new OtherDialog.Builder(this)
                 })
                 .setWidth(0.8f).show();
 ```
+
+```
+new OtherDialog.Builder(this)
+                .setContentView(R.layout.layout_popup_dialog)
+                .setDismissButton(R.id.dialog_cancel)
+                .setLoadImageType(new OtherDialog.ImageLoader() {
+                    @Override
+                    public void display(Context context, ImageView imageView, String url) {
+                        Glide.with(context).load(url).into(imageView);
+                    }
+                })
+                .setImageResource(R.id.dialog_image, "http://img.sj33.cn/uploads/allimg/201612/14153R264-52.jpg")
+                .setWidth(0.7f)
+                .setHeight(0.6f)
+                .show();
+```
+
+
 In OtherDialog, you should create a xml first, and then use setContentView to bundle with dialog, and now you can use all views in your custom layout.
 
 | Method                      | Usage                                |Parameter Example
 |:-------------               |:-------------                        |:-------------
 | setContentView              | bundle the layout to dialog          |setContentView(R.layout.layout_dialog)
 | setText                     | set text                             |setText(R.id.dialog_title, "This is title")
+| setImageResource            | set image                            |setImageResource(R.id.dialog_image, R.mipmap.ic_launcher)
+| setLoadImageType            | set image load type                  |Glide、ImageLoader......
+| setImageResource            | set image (http)                     |setImageResource(R.id.dialog_image, "http://www.baidu.com/1.jpg")
 | setOnClickListener          | set click event                      |setOnClickListener(R.id.dialog_button1, "ABC", listener
 | setAdapter                  | set adapter to AdapterView           |setAdapter(R.id.listview,adapter)
 | setOnItemClickListener      | set item click event to AdapterView  |setOnItemClickListener(R.id.listview,listener)

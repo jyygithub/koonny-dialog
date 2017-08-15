@@ -12,8 +12,8 @@
 ```
 dependencies {
 	// ... other dependencies here
-    compile 'com.jiangyy:dialog:1.0.3'
-    // implementation 'com.jiangyy:dialog:1.0.3'
+    compile 'com.jiangyy:dialog:1.0.4'
+    // implementation 'com.jiangyy:dialog:1.0.4'
 }
 ```
 
@@ -89,9 +89,15 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
 多选对话框的显示风格和单选对话框相似，不过它可以选择多个，你选择后会返回一个List。
 
 ```
-new MultipleChoiceDialog.Builder(this)
-				.setTitle("提示")
+ new MultipleChoiceDialog.Builder(this).setTitle("提示")
                 .addList(new String[]{"1", "2", "3"})
+                .setMaxChoice(2)
+                .setExceedsListener(new MultipleChoiceDialog.ExceedsListener() {
+                    @Override
+                    public void show() {
+                        Toast.makeText(MainActivity.this, "选多啦！！！", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .addListener(new MultipleChoiceDialog.ClickListener() {
                     @Override
                     public void OnFinishClick(List<String> data, List<Integer> data0) {
@@ -191,18 +197,38 @@ new OtherDialog.Builder(this)
                 .setWidth(0.8f).show();
 ```
 
+```
+new OtherDialog.Builder(this)
+                .setContentView(R.layout.layout_popup_dialog)
+                .setDismissButton(R.id.dialog_cancel)
+                .setLoadImageType(new OtherDialog.ImageLoader() {
+                    @Override
+                    public void display(Context context, ImageView imageView, String url) {
+                        Glide.with(context).load(url).into(imageView);
+                    }
+                })
+                .setImageResource(R.id.dialog_image, "http://img.sj33.cn/uploads/allimg/201612/14153R264-52.jpg")
+                .setWidth(0.7f)
+                .setHeight(0.6f)
+                .show();
+```
+
+
 In OtherDialog, you should create a xml first, and then use setContentView to bundle with dialog, and now you can use all views in your custom layout.
 
 | 方法| 用法|传参例子
-|:-------------               |:-------------                        |:-------------|
-| setContentView              | 给对话框绑定布局文件          |setContentView(R.layout.layout_dialog)|
-| setText                     | 设置文本                           |setText(R.id.dialog_title, "This is title")|
-| setOnClickListener          | 设置点击事件                      |setOnClickListener(R.id.dialog_button1, "ABC", listener|
-| setAdapter                  | 设置适配器           |setAdapter(R.id.listview,adapter)|
-| setOnItemClickListener      | 设置Item点击  |setOnItemClickListener(R.id.listview,listener)|
-| bundleInputListener         | 当View点击后获取某个输入框的值           |bundleInputListener(R.id.dialog_input, R.id.dialog_button2, listener)|
-| setWidth                    | 设置对话框的宽度（屏幕宽度的百分之几）                |setWidth(0.8f) ：80% of screen width|
-| setHeight                   |设置对话框高度（屏幕高度的百分之几）      |setHheight(0.8f) ：80% of screen height|
-| setGravity                  | 设置对话框的相对位置  |setGravity(Gravity.BOTTOM)|
-| setCanceledOnTouchOutside   |  |  |
-| setCancelable               |  |  |
+|:-------------               |:-------------                        |:-------------
+| setContentView              | 给对话框绑定布局文件          |setContentView(R.layout.layout_dialog)
+| setText                     | 设置文本                           |setText(R.id.dialog_title, "This is title")
+| setImageResource            | 加载本地图片                            |setImageResource(R.id.dialog_image, R.mipmap.ic_launcher)
+| setLoadImageType            | 设置加载网络图片方式                   |Glide、ImageLoader......
+| setImageResource            | 加载网络图片                    |setImageResource(R.id.dialog_image, "http://www.baidu.com/1.jpg")
+| setOnClickListener          | 设置点击事件                      |setOnClickListener(R.id.dialog_button1, "ABC", listener
+| setAdapter                  | 设置适配器           |setAdapter(R.id.listview,adapter)
+| setOnItemClickListener      | 设置Item点击  |setOnItemClickListener(R.id.listview,listener)
+| bundleInputListener         | 当View点击后获取某个输入框的值           |bundleInputListener(R.id.dialog_input, R.id.dialog_button2, listener)
+| setWidth                    | 设置对话框的宽度（屏幕宽度的百分之几）                |setWidth(0.8f) ：80% of screen width
+| setHeight                   |设置对话框高度（屏幕高度的百分之几）      |setHheight(0.8f) ：80% of screen height
+| setGravity                  | 设置对话框的相对位置  |setGravity(Gravity.BOTTOM)
+| setCanceledOnTouchOutside   |  |
+| setCancelable               |  |
