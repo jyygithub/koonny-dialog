@@ -1,12 +1,15 @@
 package com.jiangyy.sample;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.jiangyy.easydialog.CommonDialog;
 import com.jiangyy.easydialog.LoadingDialog;
 import com.jiangyy.easydialog.OtherDialog;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public void multipleDialog(View view) {
         new MultipleChoiceDialog.Builder(this).setTitle("提示")
                 .addList(new String[]{"1", "2", "3"})
+                .setMaxChoice(1)
                 .addListener(new MultipleChoiceDialog.ClickListener() {
                     @Override
                     public void OnFinishClick(List<String> data, List<Integer> data0) {
@@ -142,6 +146,24 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setWidth(0.8f).show();
+
+    }
+
+    public void popupDialog(View view) {
+
+        new OtherDialog.Builder(this)
+                .setContentView(R.layout.layout_popup_dialog)
+                .setDismissButton(R.id.dialog_cancel)
+                .setLoadImageType(new OtherDialog.ImageLoader() {
+                    @Override
+                    public void display(Context context, ImageView imageView, String url) {
+                        Glide.with(context).load(url).into(imageView);
+                    }
+                })
+                .setImageResource(R.id.dialog_image, "http://img.sj33.cn/uploads/allimg/201612/14153R264-52.jpg")
+                .setWidth(0.7f)
+                .setHeight(0.6f)
+                .show();
 
     }
 

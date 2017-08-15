@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +38,7 @@ public class MultipleChoiceDialog {
         private List<Integer> mChoicePositionList;
         private DisplayMetrics dm;
         private WindowManager windowManager;
+        private int mMaxCount = -1;
 
         public Builder(Context context) {
             mContext = context;
@@ -80,11 +82,30 @@ public class MultipleChoiceDialog {
             return this;
         }
 
+        public Builder setMaxChoice(int count) {
+            mMaxCount = count;
+            return this;
+        }
+
         public Builder addListener(final ClickListener onItemClickListener) {
             mViewHolder.lvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    mAdapter.setData(i, !mAdapter.getBooleanList().get(i));
+                    if (mMaxCount == -1 || mAdapter.getBooleanList().get(i)) {
+                        mAdapter.setData(i, !mAdapter.getBooleanList().get(i));
+                    } else {
+                        int c = 0;
+                        for (Boolean aBoolean : mAdapter.getBooleanList()) {
+                            if (aBoolean) {
+                                c++;
+                            }
+                        }
+                        if (c == mMaxCount) {
+                            Toast.makeText(mContext, "超过最多数量", Toast.LENGTH_SHORT).show();
+                        } else {
+                            mAdapter.setData(i, !mAdapter.getBooleanList().get(i));
+                        }
+                    }
                 }
             });
             mViewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {

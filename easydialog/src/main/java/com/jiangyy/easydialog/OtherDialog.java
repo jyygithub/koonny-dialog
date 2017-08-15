@@ -2,6 +2,7 @@ package com.jiangyy.easydialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.util.DisplayMetrics;
@@ -13,6 +14,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -30,6 +32,7 @@ public class OtherDialog {
 
         private WindowManager.LayoutParams mParams;
         private DisplayMetrics mDisplayMetrics;
+        private ImageLoader mImageLoader;
 
         public Builder(Context context) {
             mContext = context;
@@ -60,6 +63,25 @@ public class OtherDialog {
             return this;
         }
 
+        public Builder setImageResource(@IdRes int id, int resid) {
+            ImageView imageView = mView.findViewById(id);
+            imageView.setImageResource(resid);
+            return this;
+        }
+
+        public Builder setLoadImageType(ImageLoader imageLoader) {
+            mImageLoader = imageLoader;
+            return this;
+        }
+
+        public Builder setImageResource(@IdRes int id, String url) {
+            ImageView imageView = mView.findViewById(id);
+            if (mImageLoader != null) {
+                mImageLoader.display(mContext, imageView, url);
+            }
+            return this;
+        }
+
         public Builder setOnClickListener(@IdRes int id, final View.OnClickListener listener) {
             mView.findViewById(id).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -68,6 +90,16 @@ public class OtherDialog {
                     if (listener != null) {
                         listener.onClick(view);
                     }
+                }
+            });
+            return this;
+        }
+
+        public Builder setDismissButton(@IdRes int id) {
+            mView.findViewById(id).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
                 }
             });
             return this;
@@ -169,6 +201,10 @@ public class OtherDialog {
 
     public interface InputListener {
         void onClick(View view, String message);
+    }
+
+    public interface ImageLoader {
+        void display(Context context, ImageView imageView, String url);
     }
 
 }
