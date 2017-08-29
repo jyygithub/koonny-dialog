@@ -12,6 +12,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        DialogUtils.initStyle(R.style.DialogTheme);
+        DialogUtils.initStyle(R.style.Theme_AppCompat_DayNight_Dialog_Alert);
     }
 }
