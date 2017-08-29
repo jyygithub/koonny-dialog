@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jiangyy.easydialog.utils.DialogUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -142,7 +144,7 @@ public class MultipleChoiceDialog {
 
         private void initView() {
 
-            mDialog = new Dialog(mContext, R.style.EasyListDialogStyle);
+            mDialog = new Dialog(mContext, DialogUtils.getListStyle());
 
             mView = LayoutInflater.from(mContext).inflate(R.layout.layout_easy_list_dialog, null);
             mDialog.setContentView(mView);

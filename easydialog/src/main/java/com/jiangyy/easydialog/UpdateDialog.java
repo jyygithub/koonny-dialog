@@ -3,7 +3,6 @@ package com.jiangyy.easydialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -11,8 +10,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.jiangyy.easydialog.utils.DialogUtils;
 
 /**
  * Created by JYY on 2017/8/6.
@@ -182,7 +182,7 @@ public class UpdateDialog {
         }
 
         private void initView() {
-            mDialog = new Dialog(mContext, R.style.EasyDialogStyle);
+            mDialog = new Dialog(mContext, DialogUtils.getStyle());
             mView = LayoutInflater.from(mContext).inflate(R.layout.layout_update_dialog, null);
             mViewHolder = new ViewHolder(mView);
             mDialog.setContentView(mView);

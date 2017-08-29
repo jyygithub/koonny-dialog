@@ -2,7 +2,6 @@ package com.jiangyy.easydialog;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.jiangyy.easydialog.utils.DialogUtils;
 
 /**
  * Created by JYY on 2017/8/5.
@@ -92,7 +93,7 @@ public class LoadingDialog {
         }
 
         private void initView() {
-            mDialog = new Dialog(mContext, R.style.EasyDialogStyle);
+            mDialog = new Dialog(mContext, DialogUtils.getStyle());
             mView = LayoutInflater.from(mContext).inflate(R.layout.layout_loading_dialog, null);
             mViewHolder = new Builder.ViewHolder(mView);
             mDialog.setContentView(mView);

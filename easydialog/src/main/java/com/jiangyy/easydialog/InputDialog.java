@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jiangyy.easydialog.utils.DialogUtils;
+
 /**
  * Created by JYY on 2017/8/5.
  */
@@ -203,7 +205,7 @@ public class InputDialog {
         }
 
         private void initView() {
-            mDialog = new Dialog(mContext, R.style.EasyDialogStyle);
+            mDialog = new Dialog(mContext, DialogUtils.getStyle());
             mView = LayoutInflater.from(mContext).inflate(R.layout.layout_input_dialog, null);
             mViewHolder = new Builder.ViewHolder(mView);
             mDialog.setContentView(mView);

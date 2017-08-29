@@ -2,7 +2,6 @@ package com.jiangyy.easydialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -16,7 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.sql.Array;
+import com.jiangyy.easydialog.utils.DialogUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,7 +94,7 @@ public class SingleChoiceDialog {
 
         private void initView() {
 
-            mDialog = new Dialog(mContext, R.style.EasyListDialogStyle);
+            mDialog = new Dialog(mContext, DialogUtils.getListStyle());
 
             mView = LayoutInflater.from(mContext).inflate(R.layout.layout_easy_list_dialog, null);
             mDialog.setContentView(mView);

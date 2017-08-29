@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jiangyy.easydialog.utils.DialogUtils;
+
 /**
  * Created by JYY on 2017/8/4.
  */
@@ -174,7 +176,7 @@ public class CommonDialog {
         }
 
         private void initView() {
-            mDialog = new Dialog(mContext, R.style.EasyDialogStyle);
+            mDialog = new Dialog(mContext, DialogUtils.getStyle());
             mView = LayoutInflater.from(mContext).inflate(R.layout.layout_easy_dialog, null);
             mViewHolder = new ViewHolder(mView);
             mDialog.setContentView(mView);

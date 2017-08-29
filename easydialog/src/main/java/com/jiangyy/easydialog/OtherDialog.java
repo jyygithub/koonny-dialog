@@ -2,20 +2,18 @@ package com.jiangyy.easydialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.jiangyy.easydialog.utils.DialogUtils;
 
 /**
  * Created by JYY on 2017/8/10.
@@ -41,7 +39,8 @@ public class OtherDialog {
         }
 
         private void initView() {
-            mDialog = new Dialog(mContext, R.style.EasyDialogStyle);
+
+            mDialog = new Dialog(mContext, DialogUtils.getStyle());
 
             mDisplayMetrics = new DisplayMetrics();
             WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
