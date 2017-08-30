@@ -2,6 +2,7 @@ package com.jiangyy.easydialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.IdRes;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -65,6 +66,12 @@ public class OtherDialog {
         public Builder setImageResource(@IdRes int id, int resid) {
             ImageView imageView = mView.findViewById(id);
             imageView.setImageResource(resid);
+            return this;
+        }
+
+        public Builder setImageBitmap(@IdRes int id, Bitmap bitmap) {
+            ImageView imageView = mView.findViewById(id);
+            imageView.setImageBitmap(bitmap);
             return this;
         }
 
