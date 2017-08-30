@@ -37,7 +37,7 @@ publish {
     userOrg = 'jiangyychn'
     groupId = 'com.jiangyy'
     artifactId = 'dialog'
-    publishVersion = '1.0.4'
+    publishVersion = '1.0.5'
     desc = 'This is a dialog library'
     website = 'https://github.com/jyygithub/dialog'
 }
