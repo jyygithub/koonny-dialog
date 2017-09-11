@@ -114,6 +114,11 @@ public class InputDialog {
             return this;
         }
 
+        public Builder setMaxEms(int maxEms) {
+            mViewHolder.etMessage.setMaxEms(maxEms);
+            return this;
+        }
+
         public Builder setPositiveButton(CharSequence text, final View.OnClickListener listener) {
             mViewHolder.tvPositiveButton.setVisibility(View.VISIBLE);
             mViewHolder.tvPositiveButton.setText(text);
