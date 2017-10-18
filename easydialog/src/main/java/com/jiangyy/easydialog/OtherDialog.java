@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.jiangyy.easydialog.utils.DialogUtils;
 
 /**
- * Created by JYY on 2017/8/10.
+ * Created by JiangYY on 2017/8/10
+ *
+ * @author JiangYY
  */
 
 public class OtherDialog {
@@ -206,10 +208,23 @@ public class OtherDialog {
     }
 
     public interface InputListener {
+        /**
+         * 输入框输入完成后的点击事件
+         *
+         * @param view    点击的按钮View
+         * @param message 获取到的输入内容
+         */
         void onClick(View view, String message);
     }
 
     public interface ImageLoader {
+        /**
+         * 用于显示网络图片
+         *
+         * @param context   Context
+         * @param imageView ImageView
+         * @param url       图片地址
+         */
         void display(Context context, ImageView imageView, String url);
     }
 

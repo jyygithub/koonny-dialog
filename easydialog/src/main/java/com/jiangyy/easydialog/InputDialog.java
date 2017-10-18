@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.jiangyy.easydialog.utils.DialogUtils;
 
 /**
- * Created by JYY on 2017/8/5.
+ * Created by JiangYY on 2017/8/5
+ *
+ * @author JiangYY
  */
 
 public class InputDialog {

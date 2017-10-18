@@ -22,7 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by JYY on 2017/8/4.
+ * Created by JiangYY on 2017/8/4
+ *
+ * @author JiangYY
  */
 
 public class SingleChoiceDialog {
@@ -36,6 +38,7 @@ public class SingleChoiceDialog {
         private ListAdapter mAdapter;
         private DisplayMetrics dm;
         private WindowManager windowManager;
+        private int mMaxShowCount = 10;
 
         public Builder(Context context) {
             mContext = context;
@@ -60,22 +63,25 @@ public class SingleChoiceDialog {
 
         public Builder addList(List<String> list) {
             mAdapter.addData(list);
-            if (mAdapter.getCount() >= 10)
+            if (mAdapter.getCount() >= mMaxShowCount) {
                 mViewHolder.lvListView.getLayoutParams().height = (int) (dm.heightPixels * 0.65);
+            }
             return this;
         }
 
         public Builder addList(String[] list) {
             mAdapter.addData(Arrays.asList(list));
-            if (mAdapter.getCount() >= 10)
+            if (mAdapter.getCount() >= mMaxShowCount) {
                 mViewHolder.lvListView.getLayoutParams().height = (int) (dm.heightPixels * 0.65);
+            }
             return this;
         }
 
         public Builder addList(String list) {
             mAdapter.addData(list);
-            if (mAdapter.getCount() >= 10)
+            if (mAdapter.getCount() >= mMaxShowCount) {
                 mViewHolder.lvListView.getLayoutParams().height = (int) (dm.heightPixels * 0.65);
+            }
             return this;
         }
 
@@ -85,7 +91,7 @@ public class SingleChoiceDialog {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     dismiss();
                     if (onItemClickListener != null) {
-                        onItemClickListener.OnItemClick(mAdapter.getData().get(i), i);
+                        onItemClickListener.onItemClick(mAdapter.getData().get(i), i);
                     }
                 }
             });
@@ -153,7 +159,13 @@ public class SingleChoiceDialog {
     }
 
     public interface OnItemClickListener {
-        void OnItemClick(String title, int position);
+        /**
+         * 每项的点击事件
+         *
+         * @param title    单项的显示内容
+         * @param position 下标
+         */
+        void onItemClick(String title, int position);
     }
 
     private static class ListAdapter extends BaseAdapter {

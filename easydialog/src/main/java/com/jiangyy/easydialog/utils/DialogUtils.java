@@ -5,7 +5,9 @@ import android.support.annotation.StyleRes;
 import com.jiangyy.easydialog.R;
 
 /**
- * Created by Administrator on 2017/8/29 0029.
+ * Created by JiangYY on 2017/8/29
+ *
+ * @author JiangYY
  */
 
 public class DialogUtils {

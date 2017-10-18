@@ -56,7 +56,7 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
                 .addList(new String[]{"1", "2", "3"})
                 .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
                     @Override
-                    public void OnItemClick(String title, int position) {
+                    public void onItemClick(String title, int position) {
                         Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -69,7 +69,7 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
                 .addList(new ArrayList<String>())
                 .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
                     @Override
-                    public void OnItemClick(String title, int position) {
+                    public void onItemClick(String title, int position) {
                         Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -80,7 +80,7 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
                 .addList("古典风格")
                 .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
                     @Override
-                    public void OnItemClick(String title, int position) {
+                    public void onItemClick(String title, int position) {
                         Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -102,7 +102,7 @@ new SingleChoiceDialog.Builder(this).setTitle("提示")
                 })
                 .addListener(new MultipleChoiceDialog.ClickListener() {
                     @Override
-                    public void OnFinishClick(List<String> data, List<Integer> data0) {
+                    public void onFinishClick(List<String> data, List<Integer> data0) {
                         String str = "";
                         for (int index = 0; index < data.size(); index++) {
                             str += "," + data.get(index);

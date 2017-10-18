@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.jiangyy.easydialog.utils.DialogUtils;
 
 /**
- * Created by JYY on 2017/8/6.
+ * Created by JiangYY on 2017/8/6
+ *
+ * @author JiangYY
  */
 
 public class UpdateDialog {

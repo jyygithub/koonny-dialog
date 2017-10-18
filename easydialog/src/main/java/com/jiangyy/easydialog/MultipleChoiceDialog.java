@@ -24,7 +24,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by JYY on 2017/8/5.
+ * Created by JiangYY on 2017/8/5
+ *
+ * @author JiangYY
  */
 
 public class MultipleChoiceDialog {
@@ -42,6 +44,7 @@ public class MultipleChoiceDialog {
         private WindowManager windowManager;
         private int mMaxCount = -1;
         private ExceedsListener mExceedsListener;
+        private int mMaxShowCount = 10;
 
         public Builder(Context context) {
             mContext = context;
@@ -66,22 +69,25 @@ public class MultipleChoiceDialog {
 
         public Builder addList(List<String> list) {
             mAdapter.addData(list);
-            if (mAdapter.getCount() >= 10)
+            if (mAdapter.getCount() >= mMaxShowCount) {
                 mViewHolder.lvListView.getLayoutParams().height = (int) (dm.heightPixels * 0.65);
+            }
             return this;
         }
 
         public Builder addList(String[] list) {
             mAdapter.addData(Arrays.asList(list));
-            if (mAdapter.getCount() >= 10)
+            if (mAdapter.getCount() >= mMaxShowCount) {
                 mViewHolder.lvListView.getLayoutParams().height = (int) (dm.heightPixels * 0.65);
+            }
             return this;
         }
 
         public Builder addList(String list) {
             mAdapter.addData(list);
-            if (mAdapter.getCount() >= 10)
+            if (mAdapter.getCount() >= mMaxShowCount) {
                 mViewHolder.lvListView.getLayoutParams().height = (int) (dm.heightPixels * 0.65);
+            }
             return this;
         }
 
@@ -134,7 +140,7 @@ public class MultipleChoiceDialog {
                             }
                         }
                         if (mChoiceStringList != null && mChoiceStringList.size() > 0) {
-                            onItemClickListener.OnFinishClick(mChoiceStringList, mChoicePositionList);
+                            onItemClickListener.onFinishClick(mChoiceStringList, mChoicePositionList);
                         }
                     }
                 }
@@ -199,10 +205,19 @@ public class MultipleChoiceDialog {
     }
 
     public interface ClickListener {
-        void OnFinishClick(List<String> data, List<Integer> data0);
+        /**
+         * 选项选择完毕后的确认点击事件
+         *
+         * @param data  选中的项的值
+         * @param data0 选中的项的下标
+         */
+        void onFinishClick(List<String> data, List<Integer> data0);
     }
 
     public interface ExceedsListener {
+        /**
+         * 选项个数限制
+         */
         void show();
     }
 

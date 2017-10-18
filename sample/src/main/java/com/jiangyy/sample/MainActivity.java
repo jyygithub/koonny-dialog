@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 .addList("古典风格")
                 .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
                     @Override
-                    public void OnItemClick(String title, int position) {
+                    public void onItemClick(String title, int position) {
                         Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .addListener(new MultipleChoiceDialog.ClickListener() {
                     @Override
-                    public void OnFinishClick(List<String> data, List<Integer> data0) {
+                    public void onFinishClick(List<String> data, List<Integer> data0) {
                         String str = "";
                         for (int index = 0; index < data.size(); index++) {
                             str += "," + data.get(index);
