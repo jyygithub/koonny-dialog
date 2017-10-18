@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
-        android:background="@drawable/shape1"
+        android:background="@drawable/easy_dialog_shape1"
         android:orientation="vertical">
 
         <TextView
@@ -33,7 +33,7 @@
         android:id="@+id/dialog_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_button3"
+        android:background="@drawable/easy_dialog_selector_button3"
         android:clickable="true"
         android:gravity="center"
         android:padding="10dp"

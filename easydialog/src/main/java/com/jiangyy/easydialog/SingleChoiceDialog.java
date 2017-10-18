@@ -160,10 +160,10 @@ public class SingleChoiceDialog {
 
     public interface OnItemClickListener {
         /**
-         * 每项的点击事件
+         * Each click event
          *
-         * @param title    单项的显示内容
-         * @param position 下标
+         * @param title    value
+         * @param position position
          */
         void onItemClick(String title, int position);
     }

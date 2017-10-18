@@ -4,7 +4,7 @@
     android:id="@+id/dialog_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape1"
+    android:background="@drawable/easy_dialog_shape1"
     android:orientation="vertical">
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/shape2"
+        android:background="@drawable/easy_dialog_shape2"
         android:gravity="center"
         android:padding="10dp"
         android:paddingLeft="5dp"
@@ -46,7 +46,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_button1"
+            android:background="@drawable/easy_dialog_selector_button1"
             android:gravity="center"
             android:padding="10dp"
             android:visibility="gone"/>
@@ -61,7 +61,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/selector_button2"
+            android:background="@drawable/easy_dialog_selector_button2"
             android:gravity="center"
             android:padding="10dp"
             android:textStyle="bold"

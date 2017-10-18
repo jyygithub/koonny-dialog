@@ -2,13 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
 task javadoc(type: Javadoc) {
-    options.encoding "UTF-8"
+    options.encoding = "UTF-8"
     options.charSet 'UTF-8'
 }
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 14

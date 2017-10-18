@@ -209,21 +209,21 @@ public class OtherDialog {
 
     public interface InputListener {
         /**
-         * 输入框输入完成后的点击事件
+         * Enter the EditText to complete the click event
          *
-         * @param view    点击的按钮View
-         * @param message 获取到的输入内容
+         * @param view    Click the view
+         * @param message The contents of the input
          */
         void onClick(View view, String message);
     }
 
     public interface ImageLoader {
         /**
-         * 用于显示网络图片
+         * Used to display network pictures
          *
          * @param context   Context
          * @param imageView ImageView
-         * @param url       图片地址
+         * @param url       Url
          */
         void display(Context context, ImageView imageView, String url);
     }

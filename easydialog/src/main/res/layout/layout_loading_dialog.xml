@@ -3,7 +3,7 @@
               android:id="@+id/dialog_layout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@drawable/shape1"
+              android:background="@drawable/easy_dialog_shape1"
               android:gravity="center"
               android:orientation="vertical"
               android:padding="10dp">

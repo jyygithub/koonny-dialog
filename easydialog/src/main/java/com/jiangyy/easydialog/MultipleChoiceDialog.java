@@ -206,17 +206,17 @@ public class MultipleChoiceDialog {
 
     public interface ClickListener {
         /**
-         * 选项选择完毕后的确认点击事件
+         * Confirm the click event after the option is selected
          *
-         * @param data  选中的项的值
-         * @param data0 选中的项的下标
+         * @param data  values
+         * @param data0 position
          */
         void onFinishClick(List<String> data, List<Integer> data0);
     }
 
     public interface ExceedsListener {
         /**
-         * 选项个数限制
+         * Number of options limit
          */
         void show();
     }
@@ -226,7 +226,7 @@ public class MultipleChoiceDialog {
         private Context mContext;
         private List<String> mList;
         private List<Boolean> mBooleanList;
-        private int mChoiceIcon = R.drawable.ic_yes;
+        private int mChoiceIcon = R.drawable.easy_dialog_ic_yes;
 
         public ListAdapter(Context context) {
             mContext = context;
