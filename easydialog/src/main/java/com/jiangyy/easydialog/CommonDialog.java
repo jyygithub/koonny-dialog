@@ -3,6 +3,7 @@ package com.jiangyy.easydialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -197,7 +198,7 @@ public class CommonDialog {
             TextView tvTitle;
             TextView tvMessage;
             TextView tvPositiveButton, tvNegativeButton;
-            LinearLayout vgLayout;
+            ConstraintLayout vgLayout;
             View line1, line2;
 
             public ViewHolder(View view) {
