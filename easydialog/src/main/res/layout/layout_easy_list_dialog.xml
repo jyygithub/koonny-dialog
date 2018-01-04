@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="提示"
+            android:text="- 提示 -"
             android:textSize="12sp"/>
 
         <ListView
@@ -33,8 +33,10 @@
         android:id="@+id/dialog_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/easy_dialog_selector_button3"
+        android:background="@drawable/easy_dialog_shape1"
         android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         android:gravity="center"
         android:padding="10dp"
         android:text="取消"
