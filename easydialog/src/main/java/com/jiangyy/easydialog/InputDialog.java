@@ -3,6 +3,7 @@ package com.jiangyy.easydialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -231,7 +232,7 @@ public class InputDialog {
             TextView tvTitle;
             EditText etMessage;
             TextView tvPositiveButton, tvNegativeButton;
-            LinearLayout vgLayout;
+            ConstraintLayout vgLayout;
 
             public ViewHolder(View view) {
 

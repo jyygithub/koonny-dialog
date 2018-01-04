@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadingDialog(View view) {
         final LoadingDialog.Builder mBuilder = new LoadingDialog.Builder(this);
-        mBuilder.setTitle("正在加载ing...");
+        mBuilder.setTitle("正在加载ing...正在加载...正在加载...正在加载...正在加载...");
         mBuilder.showProgress(true).show();
 
         new Thread(new Runnable() {

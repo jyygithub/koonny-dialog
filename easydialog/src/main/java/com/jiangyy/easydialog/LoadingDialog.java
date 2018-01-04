@@ -105,7 +105,7 @@ public class LoadingDialog {
             windowManager.getDefaultDisplay().getMetrics(dm);
             WindowManager.LayoutParams lp = mDialog.getWindow().getAttributes();
 //            lp.width = (int) (dm.widthPixels * 0.3);
-            lp.height = (int) (dm.widthPixels * 0.3);
+//            lp.height = (int) (dm.widthPixels * 0.3);
             mDialog.getWindow().setAttributes(lp);
 
             mViewUpdateHandler = new Handler() {
