@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.jiangyy.easydialog.BottomMenuDialog;
 import com.jiangyy.easydialog.CommonDialog;
 import com.jiangyy.easydialog.LoadingDialog;
 import com.jiangyy.easydialog.OtherDialog;
@@ -57,6 +58,25 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .show();
 
+    }
+
+    public void bottomMenuDialog(View view) {
+
+        final List<BottomMenuDialog.MenuItemBean> list = new ArrayList<>();
+        list.add(new BottomMenuDialog.MenuItemBean(R.drawable.ic_qq, "QQ"));
+        list.add(new BottomMenuDialog.MenuItemBean(R.drawable.ic_wechat, "微信"));
+        list.add(new BottomMenuDialog.MenuItemBean(R.drawable.ic_weibo, "微博"));
+        list.add(new BottomMenuDialog.MenuItemBean(R.drawable.ic_alipay, "支付宝"));
+        list.add(new BottomMenuDialog.MenuItemBean(R.drawable.ic_yixin, "易信"));
+
+        new BottomMenuDialog.Builder(this).setList(list)
+                .setOnItemClickListener(new BottomMenuDialog.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        Toast.makeText(MainActivity.this, list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
     }
 
     public void multipleDialog(View view) {
