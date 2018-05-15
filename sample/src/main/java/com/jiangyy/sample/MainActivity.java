@@ -3,7 +3,6 @@ package com.jiangyy.sample;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,14 +11,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.jiangyy.easydialog.BottomMenuDialog;
 import com.jiangyy.easydialog.CommonDialog;
+import com.jiangyy.easydialog.InputDialog;
 import com.jiangyy.easydialog.LoadingDialog;
+import com.jiangyy.easydialog.MultipleChoiceDialog;
 import com.jiangyy.easydialog.OtherDialog;
 import com.jiangyy.easydialog.SingleChoiceDialog;
-import com.jiangyy.easydialog.InputDialog;
-import com.jiangyy.easydialog.MultipleChoiceDialog;
 import com.jiangyy.easydialog.UpdateDialog;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         new SingleChoiceDialog.Builder(this).setTitle("提示")
                 .addList("古典风格")
-                .setOnItemClickListener(new SingleChoiceDialog.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(String title, int position) {
-                        Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show();
-                    }
-                })
+                .setOnItemClickListener((title, position) -> Toast.makeText(MainActivity.this, title + "," + position, Toast.LENGTH_SHORT).show())
                 .show();
 
     }

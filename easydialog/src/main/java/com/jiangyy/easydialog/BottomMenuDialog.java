@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/1/4 0004.
+ * @author Administrator
+ * @date 2018/1/4 0004
  */
-
 public class BottomMenuDialog {
 
     public static class Builder {
