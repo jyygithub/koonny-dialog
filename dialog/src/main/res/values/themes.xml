@@ -1,0 +1,44 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <color name="koonny_dialog_background_color">#f8f8f8</color>
+    <color name="koonny_dialog_text_color">#FF000000</color>
+    <color name="koonny_dialog_sub_text_color">#FF888888</color>
+    <color name="koonny_dialog_divider_color">#FFF2F2F2</color>
+    <color name="koonny_dialog_ripple_color">#CCCCCC</color>
+    <dimen name="koonny_dialog_radius">12dp</dimen>
+
+    <style name="Theme.Koonny.Dialog" parent="@style/Theme.AppCompat.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:textViewStyle">@style/Theme.Koonny.Dialog.TextView</item>
+        <item name="android:buttonStyle">@style/Theme.Koonny.Dialog.Button</item>
+        <item name="buttonStyle">@style/Theme.Koonny.Dialog.Button</item>
+    </style>
+
+    <style name="Theme.Koonny.Dialog.Bottom" parent="Theme.Koonny.Dialog">
+        <item name="android:windowAnimationStyle">@style/Animation.Koonny.Dialog</item>
+    </style>
+
+    <style name="Theme.Koonny.Dialog.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/koonny_dialog_text_color</item>
+    </style>
+
+    <style name="Theme.Koonny.Dialog.Button" parent="Widget.AppCompat.TextView">
+        <item name="android:background">@drawable/koonny_dialog_button_selector</item>
+        <item name="android:textColor">@color/koonny_dialog_text_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">14dp</item>
+    </style>
+
+    <style name="Animation.Koonny.Dialog" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/koonny_dialog_show</item>
+        <item name="android:windowExitAnimation">@anim/koonny_dialog_dismiss</item>
+    </style>
+
+</resources>
