@@ -29,13 +29,12 @@ import com.koonny.wheelview.contract.WheelFormatter
 class WheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.WheelStyle) :
     View(context, attrs, defStyleAttr), Runnable {
 
-    private var data = mutableListOf<Any>()
+    private var data: List<*> = mutableListOf<Any>()
     private var formatter: WheelFormatter? = null
     private var defaultItem: Any? = null
     private var visibleItemCount = 0
     private var defaultItemPosition = 0
-    var currentPosition = 0
-        protected set
+    private var currentPosition = 0
     private var maxWidthText: String? = null
     private var textColor = 0
     private var selectedTextColor = 0
@@ -154,15 +153,8 @@ class WheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         typedArray.recycle()
     }
 
-    protected fun generatePreviewData(): MutableList<Any> {
-        val data = mutableListOf<Any>()
-        data.add("贵州穿青人")
-        data.add("大定府羡民")
-        data.add("不在五十六个民族之内")
-        data.add("已识别待定民族")
-        data.add("穿青山魈人马")
-        data.add("李裕江")
-        return data
+    private fun generatePreviewData(): List<*> {
+        return listOf("床前明月光", "疑似地上霜", "举头望明月", "低头思故乡")
     }
 
     private fun updateVisibleItemCount() {
@@ -251,22 +243,22 @@ class WheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         this.formatter = formatter
     }
 
-    fun getData(): MutableList<Any> {
+    fun getData(): List<*> {
         return data
     }
 
-    fun setData(newData: MutableList<Any>?) {
+    fun setData(newData: List<*>?) {
         setData(newData, 0)
     }
 
-    fun setData(newData: MutableList<Any>?, defaultValue: Any?) {
+    fun setData(newData: List<*>?, defaultValue: Any?) {
         setData(newData, findPosition(defaultValue))
     }
 
-    fun setData(newData: MutableList<Any>?, defaultPosition: Int) {
+    fun setData(newData: List<*>?, defaultPosition: Int) {
         var newData = newData
         if (newData == null) {
-            newData = mutableListOf()
+            newData = mutableListOf<Any>()
         }
         data = newData
         notifyDataSetChanged(defaultPosition)
@@ -1130,14 +1122,4 @@ class WheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         animator.start()
     }
 
-    companion object {
-        @Deprecated("")
-        val SCROLL_STATE_IDLE = ScrollState.IDLE
-
-        @Deprecated("")
-        val SCROLL_STATE_DRAGGING = ScrollState.DRAGGING
-
-        @Deprecated("")
-        val SCROLL_STATE_SCROLLING = ScrollState.SCROLLING
-    }
 }
