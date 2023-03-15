@@ -34,7 +34,8 @@ class WheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var defaultItem: Any? = null
     private var visibleItemCount = 0
     private var defaultItemPosition = 0
-    private var currentPosition = 0
+    var currentPosition = 0
+        protected set
     private var maxWidthText: String? = null
     private var textColor = 0
     private var selectedTextColor = 0
