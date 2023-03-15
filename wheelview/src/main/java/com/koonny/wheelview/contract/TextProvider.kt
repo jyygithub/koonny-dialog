@@ -1,8 +1,5 @@
-package com.koonny.wheelview.contract;
+package com.koonny.wheelview.contract
 
-public interface TextProvider {
-
-    String provideText();
-
+interface TextProvider {
+    fun provideText(): String?
 }
-

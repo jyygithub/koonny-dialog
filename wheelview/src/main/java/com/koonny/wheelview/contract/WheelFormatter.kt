@@ -1,9 +1,5 @@
-package com.koonny.wheelview.contract;
+package com.koonny.wheelview.contract
 
-import androidx.annotation.NonNull;
-
-public interface WheelFormatter {
-
-    String formatItem(@NonNull Object item);
-
+interface WheelFormatter {
+    fun formatItem(item: Any): String?
 }

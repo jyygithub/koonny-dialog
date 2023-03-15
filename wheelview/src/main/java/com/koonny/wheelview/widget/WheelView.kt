@@ -1,1226 +1,1143 @@
-package com.koonny.wheelview;
+package com.koonny.wheelview.widget
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Camera;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Region;
-import android.graphics.Typeface;
-import android.os.Build;
-import android.os.Handler;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.widget.Scroller;
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
+import android.content.Context
+import android.graphics.*
+import android.os.Build
+import android.os.Handler
+import android.text.TextUtils
+import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.VelocityTracker
+import android.view.View
+import android.view.ViewConfiguration
+import android.widget.Scroller
+import androidx.annotation.ColorInt
+import androidx.annotation.IntRange
+import androidx.annotation.Px
+import androidx.annotation.StyleRes
+import com.koonny.wheelview.R
+import com.koonny.wheelview.annotation.CurtainCorner
+import com.koonny.wheelview.annotation.ItemTextAlign
+import com.koonny.wheelview.annotation.ScrollState
+import com.koonny.wheelview.contract.OnWheelChangedListener
+import com.koonny.wheelview.contract.TextProvider
+import com.koonny.wheelview.contract.WheelFormatter
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.IntRange;
-import androidx.annotation.Px;
-import androidx.annotation.StyleRes;
+class WheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.attr.WheelStyle) :
+    View(context, attrs, defStyleAttr), Runnable {
 
-import com.koonny.wheelview.annotation.CurtainCorner;
-import com.koonny.wheelview.annotation.ItemTextAlign;
-import com.koonny.wheelview.annotation.ScrollState;
-import com.koonny.wheelview.contract.OnWheelChangedListener;
-import com.koonny.wheelview.contract.TextProvider;
-import com.koonny.wheelview.contract.WheelFormatter;
+    private var data = mutableListOf<Any>()
+    private var formatter: WheelFormatter? = null
+    private var defaultItem: Any? = null
+    private var visibleItemCount = 0
+    private var defaultItemPosition = 0
+    var currentPosition = 0
+        protected set
+    private var maxWidthText: String? = null
+    private var textColor = 0
+    private var selectedTextColor = 0
+    private var textSize = 0f
+    private var selectedTextSize = 0f
+    private var selectedTextBold = false
+    private var indicatorSize = 0f
+    private var indicatorColor = 0
+    private var curtainColor = 0
+    private var curtainCorner = 0
+    private var curtainRadius = 0f
+    private var itemSpace = 0
+    private var textAlign = 0
+    private var sameWidthEnabled = false
+    private var indicatorEnabled = false
+    private var curtainEnabled = false
+    private var atmosphericEnabled = false
+    private var cyclicEnabled = false
+    private var curvedEnabled = false
+    private var curvedMaxAngle = 90
+    private var curvedIndicatorSpace = 0
+    private val handler = Handler()
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG or Paint.LINEAR_TEXT_FLAG)
+    private val scroller: Scroller
+    private var tracker: VelocityTracker? = null
+    private var onWheelChangedListener: OnWheelChangedListener? = null
+    private val rectDrawn = Rect()
+    private val rectIndicatorHead = Rect()
+    private val rectIndicatorFoot = Rect()
+    private val rectCurrentItem = Rect()
+    private val camera = Camera()
+    private val matrixRotate = Matrix()
+    private val matrixDepth = Matrix()
+    private var lastScrollPosition = 0
+    private var drawnItemCount = 0
+    private var halfDrawnItemCount = 0
+    private var textMaxWidth = 0
+    private var textMaxHeight = 0
+    private var itemHeight = 0
+    private var halfItemHeight = 0
+    private var halfWheelHeight = 0
+    private var minFlingYCoordinate = 0
+    private var maxFlingYCoordinate = 0
+    private var wheelCenterXCoordinate = 0
+    private var wheelCenterYCoordinate = 0
+    private var drawnCenterXCoordinate = 0
+    private var drawnCenterYCoordinate = 0
+    private var scrollOffsetYCoordinate = 0
+    private var lastPointYCoordinate = 0
+    private var downPointYCoordinate = 0
+    private val minimumVelocity: Int
+    private val maximumVelocity: Int
+    private val touchSlop: Int
+    private var isClick = false
+    private var isForceFinishScroll = false
 
-import java.util.ArrayList;
-import java.util.List;
-
-@SuppressWarnings({"unused"})
-public class WheelView extends View implements Runnable {
-    @Deprecated
-    public static final int SCROLL_STATE_IDLE = ScrollState.IDLE;
-    @Deprecated
-    public static final int SCROLL_STATE_DRAGGING = ScrollState.DRAGGING;
-    @Deprecated
-    public static final int SCROLL_STATE_SCROLLING = ScrollState.SCROLLING;
-
-    protected List<?> data = new ArrayList<>();
-    protected WheelFormatter formatter;
-    protected Object defaultItem;
-    protected int visibleItemCount;
-    protected int defaultItemPosition;
-    protected int currentPosition;
-    protected String maxWidthText;
-    protected int textColor;
-    protected int selectedTextColor;
-    protected float textSize, selectedTextSize;
-    protected boolean selectedTextBold;
-    protected float indicatorSize;
-    protected int indicatorColor;
-    protected int curtainColor;
-    protected int curtainCorner;
-    protected float curtainRadius;
-    protected int itemSpace;
-    protected int textAlign;
-    protected boolean sameWidthEnabled;
-    protected boolean indicatorEnabled;
-    protected boolean curtainEnabled;
-    protected boolean atmosphericEnabled;
-    protected boolean cyclicEnabled;
-    protected boolean curvedEnabled;
-    protected int curvedMaxAngle = 90;
-    protected int curvedIndicatorSpace;
-
-    private final Handler handler = new Handler();
-    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG | Paint.LINEAR_TEXT_FLAG);
-    private final Scroller scroller;
-    private VelocityTracker tracker;
-    private OnWheelChangedListener onWheelChangedListener;
-    private final Rect rectDrawn = new Rect();
-    private final Rect rectIndicatorHead = new Rect();
-    private final Rect rectIndicatorFoot = new Rect();
-    private final Rect rectCurrentItem = new Rect();
-    private final Camera camera = new Camera();
-    private final Matrix matrixRotate = new Matrix();
-    private final Matrix matrixDepth = new Matrix();
-    private int lastScrollPosition;
-    private int drawnItemCount;
-    private int halfDrawnItemCount;
-    private int textMaxWidth, textMaxHeight;
-    private int itemHeight, halfItemHeight;
-    private int halfWheelHeight;
-    private int minFlingYCoordinate, maxFlingYCoordinate;
-    private int wheelCenterXCoordinate, wheelCenterYCoordinate;
-    private int drawnCenterXCoordinate, drawnCenterYCoordinate;
-    private int scrollOffsetYCoordinate;
-    private int lastPointYCoordinate;
-    private int downPointYCoordinate;
-    private final int minimumVelocity;
-    private final int maximumVelocity;
-    private final int touchSlop;
-    private boolean isClick;
-    private boolean isForceFinishScroll;
-
-    public WheelView(Context context) {
-        this(context, null);
-    }
-
-    public WheelView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.WheelStyle);
-    }
-
-    public WheelView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initAttrs(context, attrs, defStyleAttr, R.style.WheelDefault);
-        initTextPaint();
-        updateVisibleItemCount();
-        scroller = new Scroller(context);
-        ViewConfiguration configuration = ViewConfiguration.get(context);
-        minimumVelocity = configuration.getScaledMinimumFlingVelocity();
-        maximumVelocity = configuration.getScaledMaximumFlingVelocity();
-        touchSlop = configuration.getScaledTouchSlop();
-        if (isInEditMode()) {
-            setData(generatePreviewData());
+    init {
+        initAttrs(context, attrs, defStyleAttr, R.style.Widget_Koonny_WheelView)
+        initTextPaint()
+        updateVisibleItemCount()
+        scroller = Scroller(context)
+        val configuration = ViewConfiguration.get(context)
+        minimumVelocity = configuration.scaledMinimumFlingVelocity
+        maximumVelocity = configuration.scaledMaximumFlingVelocity
+        touchSlop = configuration.scaledTouchSlop
+        if (isInEditMode) {
+            setData(generatePreviewData())
         }
     }
 
-    private void initTextPaint() {
-        paint.setColor(textColor);
-        paint.setTextSize(textSize);
-        paint.setFakeBoldText(false);
-        paint.setStyle(Paint.Style.FILL);
+    private fun initTextPaint() {
+        paint.color = textColor
+        paint.textSize = textSize
+        paint.isFakeBoldText = false
+        paint.style = Paint.Style.FILL
     }
 
-    public void setStyle(@StyleRes int style) {
-        initAttrs(getContext(), null, R.attr.WheelStyle, style);
-        initTextPaint();
-        updatePaintTextAlign();
-        computeTextWidthAndHeight();
-        computeFlingLimitYCoordinate();
-        computeIndicatorRect();
-        computeCurrentItemRect();
-        requestLayout();
-        invalidate();
+    fun setStyle(@StyleRes style: Int) {
+        initAttrs(context, null, R.attr.WheelStyle, style)
+        initTextPaint()
+        updatePaintTextAlign()
+        computeTextWidthAndHeight()
+        computeFlingLimitYCoordinate()
+        computeIndicatorRect()
+        computeCurrentItemRect()
+        requestLayout()
+        invalidate()
     }
 
-    private void initAttrs(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        float density = context.getResources().getDisplayMetrics().density;
-        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WheelView, defStyleAttr, defStyleRes);
-        visibleItemCount = typedArray.getInt(R.styleable.WheelView_wheel_visibleItemCount, 5);
-        sameWidthEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_sameWidthEnabled, false);
-        maxWidthText = typedArray.getString(R.styleable.WheelView_wheel_maxWidthText);
-        textColor = typedArray.getColor(R.styleable.WheelView_wheel_itemTextColor, 0xFF888888);
-        selectedTextColor = typedArray.getColor(R.styleable.WheelView_wheel_itemTextColorSelected, 0xFF000000);
-        textSize = typedArray.getDimension(R.styleable.WheelView_wheel_itemTextSize, 15 * scaledDensity);
-        selectedTextSize = typedArray.getDimension(R.styleable.WheelView_wheel_itemTextSizeSelected, textSize);
-        selectedTextBold = typedArray.getBoolean(R.styleable.WheelView_wheel_itemTextBoldSelected, false);
-        textAlign = typedArray.getInt(R.styleable.WheelView_wheel_itemTextAlign, ItemTextAlign.CENTER);
-        itemSpace = typedArray.getDimensionPixelSize(R.styleable.WheelView_wheel_itemSpace, (int) (20 * density));
-        cyclicEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_cyclicEnabled, false);
-        indicatorEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_indicatorEnabled, true);
-        indicatorColor = typedArray.getColor(R.styleable.WheelView_wheel_indicatorColor, 0xFFC9C9C9);
-        indicatorSize = typedArray.getDimension(R.styleable.WheelView_wheel_indicatorSize, 1 * density);
-        curvedIndicatorSpace = typedArray.getDimensionPixelSize(R.styleable.WheelView_wheel_curvedIndicatorSpace, (int) (1 * density));
-        curtainEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_curtainEnabled, false);
-        curtainColor = typedArray.getColor(R.styleable.WheelView_wheel_curtainColor, 0xFFFFFFFF);
-        curtainCorner = typedArray.getInt(R.styleable.WheelView_wheel_curtainCorner, CurtainCorner.NONE);
-        curtainRadius = typedArray.getDimension(R.styleable.WheelView_wheel_curtainRadius, 0);
-        atmosphericEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_atmosphericEnabled, false);
-        curvedEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_curvedEnabled, false);
-        curvedMaxAngle = typedArray.getInteger(R.styleable.WheelView_wheel_curvedMaxAngle, 90);
-        typedArray.recycle();
+    private fun initAttrs(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
+        val density = context.resources.displayMetrics.density
+        val scaledDensity = context.resources.displayMetrics.scaledDensity
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.WheelView, defStyleAttr, defStyleRes)
+        visibleItemCount = typedArray.getInt(R.styleable.WheelView_wheel_visibleItemCount, 5)
+        sameWidthEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_sameWidthEnabled, false)
+        maxWidthText = typedArray.getString(R.styleable.WheelView_wheel_maxWidthText)
+        textColor = typedArray.getColor(R.styleable.WheelView_wheel_itemTextColor, -0x777778)
+        selectedTextColor = typedArray.getColor(R.styleable.WheelView_wheel_itemTextColorSelected, -0x1000000)
+        textSize = typedArray.getDimension(R.styleable.WheelView_wheel_itemTextSize, 15 * scaledDensity)
+        selectedTextSize = typedArray.getDimension(R.styleable.WheelView_wheel_itemTextSizeSelected, textSize)
+        selectedTextBold = typedArray.getBoolean(R.styleable.WheelView_wheel_itemTextBoldSelected, false)
+        textAlign = typedArray.getInt(R.styleable.WheelView_wheel_itemTextAlign, ItemTextAlign.CENTER)
+        itemSpace = typedArray.getDimensionPixelSize(R.styleable.WheelView_wheel_itemSpace, (20 * density).toInt())
+        cyclicEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_cyclicEnabled, false)
+        indicatorEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_indicatorEnabled, true)
+        indicatorColor = typedArray.getColor(R.styleable.WheelView_wheel_indicatorColor, -0x363637)
+        indicatorSize = typedArray.getDimension(R.styleable.WheelView_wheel_indicatorSize, 1 * density)
+        curvedIndicatorSpace = typedArray.getDimensionPixelSize(R.styleable.WheelView_wheel_curvedIndicatorSpace, (1 * density).toInt())
+        curtainEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_curtainEnabled, false)
+        curtainColor = typedArray.getColor(R.styleable.WheelView_wheel_curtainColor, -0x1)
+        curtainCorner = typedArray.getInt(R.styleable.WheelView_wheel_curtainCorner, CurtainCorner.NONE)
+        curtainRadius = typedArray.getDimension(R.styleable.WheelView_wheel_curtainRadius, 0f)
+        atmosphericEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_atmosphericEnabled, false)
+        curvedEnabled = typedArray.getBoolean(R.styleable.WheelView_wheel_curvedEnabled, false)
+        curvedMaxAngle = typedArray.getInteger(R.styleable.WheelView_wheel_curvedMaxAngle, 90)
+        typedArray.recycle()
     }
 
-    protected List<?> generatePreviewData() {
-        List<String> data = new ArrayList<>();
-        data.add("贵州穿青人");
-        data.add("大定府羡民");
-        data.add("不在五十六个民族之内");
-        data.add("已识别待定民族");
-        data.add("穿青山魈人马");
-        data.add("李裕江");
-        return data;
+    protected fun generatePreviewData(): MutableList<Any> {
+        val data = mutableListOf<Any>()
+        data.add("贵州穿青人")
+        data.add("大定府羡民")
+        data.add("不在五十六个民族之内")
+        data.add("已识别待定民族")
+        data.add("穿青山魈人马")
+        data.add("李裕江")
+        return data
     }
 
-    private void updateVisibleItemCount() {
-        final int minCount = 2;
+    private fun updateVisibleItemCount() {
+        val minCount = 2
         if (visibleItemCount < minCount) {
-            throw new ArithmeticException("Visible item count can not be less than " + minCount);
+            throw ArithmeticException("Visible item count can not be less than $minCount")
         }
         //可见条目只能是奇数个，设置可见条目时偶数个将自动矫正为奇数个
-        int evenNumberFlag = 2;
+        val evenNumberFlag = 2
         if (visibleItemCount % evenNumberFlag == 0) {
-            visibleItemCount += 1;
+            visibleItemCount += 1
         }
-        drawnItemCount = visibleItemCount + 2;
-        halfDrawnItemCount = drawnItemCount / 2;
+        drawnItemCount = visibleItemCount + 2
+        halfDrawnItemCount = drawnItemCount / 2
     }
 
-    private void computeTextWidthAndHeight() {
-        textMaxWidth = textMaxHeight = 0;
+    private fun computeTextWidthAndHeight() {
+        textMaxHeight = 0
+        textMaxWidth = textMaxHeight
         if (sameWidthEnabled) {
-            textMaxWidth = (int) paint.measureText(formatItem(0));
+            textMaxWidth = paint.measureText(formatItem(0)).toInt()
         } else if (!TextUtils.isEmpty(maxWidthText)) {
-            textMaxWidth = (int) paint.measureText(maxWidthText);
+            textMaxWidth = paint.measureText(maxWidthText).toInt()
         } else {
             // 未指定最宽的文本，须遍历测量查找最宽的作为基准
-            int itemCount = getItemCount();
-            for (int i = 0; i < itemCount; ++i) {
-                int width = (int) paint.measureText(formatItem(i));
-                textMaxWidth = Math.max(textMaxWidth, width);
+            val itemCount = getItemCount()
+            for (i in 0 until itemCount) {
+                val width = paint.measureText(formatItem(i)).toInt()
+                textMaxWidth = Math.max(textMaxWidth, width)
             }
         }
-        Paint.FontMetrics metrics = paint.getFontMetrics();
-        textMaxHeight = (int) (metrics.bottom - metrics.top);
+        val metrics = paint.fontMetrics
+        textMaxHeight = (metrics.bottom - metrics.top).toInt()
     }
 
-    public int getItemCount() {
-        return data.size();
+    fun getItemCount(): Int {
+        return data.size
     }
 
-    public <T> T getItem(int position) {
-        final int size = data.size();
+    fun <T> getItem(position: Int): T? {
+        val size = data.size
         if (size == 0) {
-            return null;
+            return null
         }
-        int index = (position + size) % size;
-        if (index >= 0 && index <= size - 1) {
-            //noinspection unchecked
-            return (T) data.get(index);
-        }
-        return null;
+        val index = (position + size) % size
+        return if (index >= 0 && index <= size - 1) {
+            data[index] as T
+        } else null
     }
 
-    public int getPosition(Object item) {
-        if (item == null) {
-            return 0;
-        }
-        return data.indexOf(item);
+    fun getPosition(item: Any?): Int {
+        return if (item == null) {
+            0
+        } else data.indexOf(item)
     }
 
-    public int getCurrentPosition() {
-        return currentPosition;
+    fun <T> getCurrentItem(): T? {
+        return getItem(currentPosition)
     }
 
-    public <T> T getCurrentItem() {
-        return getItem(currentPosition);
+    fun getVisibleItemCount(): Int {
+        return visibleItemCount
     }
 
-    public int getVisibleItemCount() {
-        return visibleItemCount;
+    fun setVisibleItemCount(@IntRange(from = 2) count: Int) {
+        visibleItemCount = count
+        updateVisibleItemCount()
+        requestLayout()
     }
 
-    public void setVisibleItemCount(@IntRange(from = 2) int count) {
-        visibleItemCount = count;
-        updateVisibleItemCount();
-        requestLayout();
+    fun isCyclicEnabled(): Boolean {
+        return cyclicEnabled
     }
 
-    public boolean isCyclicEnabled() {
-        return cyclicEnabled;
+    fun setCyclicEnabled(isCyclic: Boolean) {
+        cyclicEnabled = isCyclic
+        computeFlingLimitYCoordinate()
+        invalidate()
     }
 
-    public void setCyclicEnabled(boolean isCyclic) {
-        this.cyclicEnabled = isCyclic;
-        computeFlingLimitYCoordinate();
-        invalidate();
+    fun setOnWheelChangedListener(listener: OnWheelChangedListener?) {
+        onWheelChangedListener = listener
     }
 
-    public void setOnWheelChangedListener(OnWheelChangedListener listener) {
-        onWheelChangedListener = listener;
+    fun setFormatter(formatter: WheelFormatter?) {
+        this.formatter = formatter
     }
 
-    public void setFormatter(WheelFormatter formatter) {
-        this.formatter = formatter;
+    fun getData(): MutableList<Any> {
+        return data
     }
 
-    public List<?> getData() {
-        return data;
+    fun setData(newData: MutableList<Any>?) {
+        setData(newData, 0)
     }
 
-    public void setData(List<?> newData) {
-        setData(newData, 0);
+    fun setData(newData: MutableList<Any>?, defaultValue: Any?) {
+        setData(newData, findPosition(defaultValue))
     }
 
-    public void setData(List<?> newData, Object defaultValue) {
-        setData(newData, findPosition(defaultValue));
-    }
-
-    public void setData(List<?> newData, int defaultPosition) {
+    fun setData(newData: MutableList<Any>?, defaultPosition: Int) {
+        var newData = newData
         if (newData == null) {
-            newData = new ArrayList<>();
+            newData = mutableListOf()
         }
-        data = newData;
-        notifyDataSetChanged(defaultPosition);
+        data = newData
+        notifyDataSetChanged(defaultPosition)
     }
 
-    public void setDefaultValue(Object value) {
-        setDefaultPosition(findPosition(value));
+    fun setDefaultValue(value: Any?) {
+        setDefaultPosition(findPosition(value))
     }
 
-    public void setDefaultPosition(int position) {
-        notifyDataSetChanged(position);
+    fun setDefaultPosition(position: Int) {
+        notifyDataSetChanged(position)
     }
 
-    private int findPosition(Object value) {
+    private fun findPosition(value: Any?): Int {
         if (value == null) {
-            return 0;
+            return 0
         }
-        boolean found = false;
-        int position = 0;
-        for (Object item : data) {
+        var found = false
+        var position = 0
+        for (item in data) {
             if (item == null) {
-                continue;
+                continue
             }
-            if (item.equals(value)) {
-                found = true;
-                break;
+            if (item == value) {
+                found = true
+                break
             }
-            if (formatter != null && formatter.formatItem(item).equals(formatter.formatItem(value))) {
-                found = true;
-                break;
+            if (formatter != null && formatter!!.formatItem(item) == formatter!!.formatItem(value)) {
+                found = true
+                break
             }
-            if (item instanceof TextProvider) {
-                String text = ((TextProvider) item).provideText();
-                if (text.equals(value.toString())) {
-                    found = true;
-                    break;
+            if (item is TextProvider) {
+                val text = item.provideText()
+                if (text == value.toString()) {
+                    found = true
+                    break
                 }
             }
-            if (item.toString().equals(value.toString())) {
-                found = true;
-                break;
+            if (item.toString() == value.toString()) {
+                found = true
+                break
             }
-            position++;
+            position++
         }
         if (!found) {
-            position = 0;
+            position = 0
         }
-        return position;
+        return position
     }
 
-    public boolean isSameWidthEnabled() {
-        return sameWidthEnabled;
+    fun isSameWidthEnabled(): Boolean {
+        return sameWidthEnabled
     }
 
-    public void setSameWidthEnabled(boolean sameWidthEnabled) {
-        this.sameWidthEnabled = sameWidthEnabled;
-        computeTextWidthAndHeight();
-        requestLayout();
-        invalidate();
+    fun setSameWidthEnabled(sameWidthEnabled: Boolean) {
+        this.sameWidthEnabled = sameWidthEnabled
+        computeTextWidthAndHeight()
+        requestLayout()
+        invalidate()
     }
 
-    public String getMaxWidthText() {
-        return maxWidthText;
+    fun getMaxWidthText(): String? {
+        return maxWidthText
     }
 
-    public void setMaxWidthText(String text) {
+    fun setMaxWidthText(text: String?) {
         if (null == text) {
-            throw new NullPointerException("Maximum width text can not be null!");
+            throw NullPointerException("Maximum width text can not be null!")
         }
-        maxWidthText = text;
-        computeTextWidthAndHeight();
-        requestLayout();
-        invalidate();
+        maxWidthText = text
+        computeTextWidthAndHeight()
+        requestLayout()
+        invalidate()
     }
 
     @ColorInt
-    public int getTextColor() {
-        return textColor;
+    fun getTextColor(): Int {
+        return textColor
     }
 
-    public void setTextColor(@ColorInt int color) {
-        textColor = color;
-        invalidate();
-    }
-
-    @ColorInt
-    public int getSelectedTextColor() {
-        return selectedTextColor;
-    }
-
-    public void setSelectedTextColor(@ColorInt int color) {
-        selectedTextColor = color;
-        computeCurrentItemRect();
-        invalidate();
-    }
-
-    @Px
-    public float getTextSize() {
-        return textSize;
-    }
-
-    public void setTextSize(@Px float size) {
-        textSize = size;
-        computeTextWidthAndHeight();
-        requestLayout();
-        invalidate();
-    }
-
-    @Px
-    public float getSelectedTextSize() {
-        return selectedTextSize;
-    }
-
-    public void setSelectedTextSize(@Px float size) {
-        selectedTextSize = size;
-        computeTextWidthAndHeight();
-        requestLayout();
-        invalidate();
-    }
-
-    public boolean getSelectedTextBold() {
-        return selectedTextBold;
-    }
-
-    public void setSelectedTextBold(boolean bold) {
-        this.selectedTextBold = bold;
-        computeTextWidthAndHeight();
-        requestLayout();
-        invalidate();
-    }
-
-    @Px
-    public int getItemSpace() {
-        return itemSpace;
-    }
-
-    public void setItemSpace(@Px int space) {
-        itemSpace = space;
-        requestLayout();
-        invalidate();
-    }
-
-    public boolean isIndicatorEnabled() {
-        return indicatorEnabled;
-    }
-
-    public void setIndicatorEnabled(boolean indicatorEnabled) {
-        this.indicatorEnabled = indicatorEnabled;
-        computeIndicatorRect();
-        invalidate();
-    }
-
-    @Px
-    public float getIndicatorSize() {
-        return indicatorSize;
-    }
-
-    public void setIndicatorSize(@Px float size) {
-        indicatorSize = size;
-        computeIndicatorRect();
-        invalidate();
+    fun setTextColor(@ColorInt color: Int) {
+        textColor = color
+        invalidate()
     }
 
     @ColorInt
-    public int getIndicatorColor() {
-        return indicatorColor;
+    fun getSelectedTextColor(): Int {
+        return selectedTextColor
     }
 
-    public void setIndicatorColor(@ColorInt int color) {
-        indicatorColor = color;
-        invalidate();
+    fun setSelectedTextColor(@ColorInt color: Int) {
+        selectedTextColor = color
+        computeCurrentItemRect()
+        invalidate()
     }
 
     @Px
-    public int getCurvedIndicatorSpace() {
-        return curvedIndicatorSpace;
+    fun getTextSize(): Float {
+        return textSize
     }
 
-    public void setCurvedIndicatorSpace(@Px int space) {
-        curvedIndicatorSpace = space;
-        computeIndicatorRect();
-        invalidate();
+    fun setTextSize(@Px size: Float) {
+        textSize = size
+        computeTextWidthAndHeight()
+        requestLayout()
+        invalidate()
     }
 
-    public boolean isCurtainEnabled() {
-        return curtainEnabled;
+    @Px
+    fun getSelectedTextSize(): Float {
+        return selectedTextSize
     }
 
-    public void setCurtainEnabled(boolean curtainEnabled) {
-        this.curtainEnabled = curtainEnabled;
+    fun setSelectedTextSize(@Px size: Float) {
+        selectedTextSize = size
+        computeTextWidthAndHeight()
+        requestLayout()
+        invalidate()
+    }
+
+    fun getSelectedTextBold(): Boolean {
+        return selectedTextBold
+    }
+
+    fun setSelectedTextBold(bold: Boolean) {
+        selectedTextBold = bold
+        computeTextWidthAndHeight()
+        requestLayout()
+        invalidate()
+    }
+
+    @Px
+    fun getItemSpace(): Int {
+        return itemSpace
+    }
+
+    fun setItemSpace(@Px space: Int) {
+        itemSpace = space
+        requestLayout()
+        invalidate()
+    }
+
+    fun isIndicatorEnabled(): Boolean {
+        return indicatorEnabled
+    }
+
+    fun setIndicatorEnabled(indicatorEnabled: Boolean) {
+        this.indicatorEnabled = indicatorEnabled
+        computeIndicatorRect()
+        invalidate()
+    }
+
+    @Px
+    fun getIndicatorSize(): Float {
+        return indicatorSize
+    }
+
+    fun setIndicatorSize(@Px size: Float) {
+        indicatorSize = size
+        computeIndicatorRect()
+        invalidate()
+    }
+
+    @ColorInt
+    fun getIndicatorColor(): Int {
+        return indicatorColor
+    }
+
+    fun setIndicatorColor(@ColorInt color: Int) {
+        indicatorColor = color
+        invalidate()
+    }
+
+    @Px
+    fun getCurvedIndicatorSpace(): Int {
+        return curvedIndicatorSpace
+    }
+
+    fun setCurvedIndicatorSpace(@Px space: Int) {
+        curvedIndicatorSpace = space
+        computeIndicatorRect()
+        invalidate()
+    }
+
+    fun isCurtainEnabled(): Boolean {
+        return curtainEnabled
+    }
+
+    fun setCurtainEnabled(curtainEnabled: Boolean) {
+        this.curtainEnabled = curtainEnabled
         if (curtainEnabled) {
-            indicatorEnabled = false;
+            indicatorEnabled = false
         }
-        computeCurrentItemRect();
-        invalidate();
+        computeCurrentItemRect()
+        invalidate()
     }
 
     @ColorInt
-    public int getCurtainColor() {
-        return curtainColor;
+    fun getCurtainColor(): Int {
+        return curtainColor
     }
 
-    public void setCurtainColor(@ColorInt int color) {
-        curtainColor = color;
-        invalidate();
+    fun setCurtainColor(@ColorInt color: Int) {
+        curtainColor = color
+        invalidate()
     }
 
     @CurtainCorner
-    public int getCurtainCorner() {
-        return curtainCorner;
+    fun getCurtainCorner(): Int {
+        return curtainCorner
     }
 
-    public void setCurtainCorner(@CurtainCorner int curtainCorner) {
-        this.curtainCorner = curtainCorner;
-        invalidate();
+    fun setCurtainCorner(@CurtainCorner curtainCorner: Int) {
+        this.curtainCorner = curtainCorner
+        invalidate()
     }
 
     @Px
-    public float getCurtainRadius() {
-        return curtainRadius;
+    fun getCurtainRadius(): Float {
+        return curtainRadius
     }
 
-    public void setCurtainRadius(@Px float curtainRadius) {
-        this.curtainRadius = curtainRadius;
-        invalidate();
+    fun setCurtainRadius(@Px curtainRadius: Float) {
+        this.curtainRadius = curtainRadius
+        invalidate()
     }
 
-    public boolean isAtmosphericEnabled() {
-        return atmosphericEnabled;
+    fun isAtmosphericEnabled(): Boolean {
+        return atmosphericEnabled
     }
 
-    public void setAtmosphericEnabled(boolean atmosphericEnabled) {
-        this.atmosphericEnabled = atmosphericEnabled;
-        invalidate();
+    fun setAtmosphericEnabled(atmosphericEnabled: Boolean) {
+        this.atmosphericEnabled = atmosphericEnabled
+        invalidate()
     }
 
-    public boolean isCurvedEnabled() {
-        return curvedEnabled;
+    fun isCurvedEnabled(): Boolean {
+        return curvedEnabled
     }
 
-    public void setCurvedEnabled(boolean isCurved) {
-        this.curvedEnabled = isCurved;
-        requestLayout();
-        invalidate();
+    fun setCurvedEnabled(isCurved: Boolean) {
+        curvedEnabled = isCurved
+        requestLayout()
+        invalidate()
     }
 
-    public int getCurvedMaxAngle() {
-        return curvedMaxAngle;
+    fun getCurvedMaxAngle(): Int {
+        return curvedMaxAngle
     }
 
-    public void setCurvedMaxAngle(int curvedMaxAngle) {
-        this.curvedMaxAngle = curvedMaxAngle;
-        requestLayout();
-        invalidate();
+    fun setCurvedMaxAngle(curvedMaxAngle: Int) {
+        this.curvedMaxAngle = curvedMaxAngle
+        requestLayout()
+        invalidate()
     }
 
     @ItemTextAlign
-    public int getTextAlign() {
-        return textAlign;
+    fun getTextAlign(): Int {
+        return textAlign
     }
 
-    public void setTextAlign(@ItemTextAlign int align) {
-        textAlign = align;
-        updatePaintTextAlign();
-        computeDrawnCenterCoordinate();
-        invalidate();
+    fun setTextAlign(@ItemTextAlign align: Int) {
+        textAlign = align
+        updatePaintTextAlign()
+        computeDrawnCenterCoordinate()
+        invalidate()
     }
 
-    private void updatePaintTextAlign() {
-        switch (textAlign) {
-            case ItemTextAlign.LEFT:
-                paint.setTextAlign(Paint.Align.LEFT);
-                break;
-            case ItemTextAlign.RIGHT:
-                paint.setTextAlign(Paint.Align.RIGHT);
-                break;
-            case ItemTextAlign.CENTER:
-            default:
-                paint.setTextAlign(Paint.Align.CENTER);
-                break;
+    private fun updatePaintTextAlign() {
+        when (textAlign) {
+            ItemTextAlign.LEFT -> paint.textAlign = Paint.Align.LEFT
+            ItemTextAlign.RIGHT -> paint.textAlign = Paint.Align.RIGHT
+            ItemTextAlign.CENTER -> paint.textAlign = Paint.Align.CENTER
+            else -> paint.textAlign = Paint.Align.CENTER
         }
     }
 
-    public Typeface getTypeface() {
-        return paint.getTypeface();
+    fun getTypeface(): Typeface {
+        return paint.typeface
     }
 
-    public void setTypeface(Typeface typeface) {
+    fun setTypeface(typeface: Typeface?) {
         if (typeface == null) {
-            return;
+            return
         }
-        paint.setTypeface(typeface);
-        computeTextWidthAndHeight();
-        requestLayout();
-        invalidate();
+        paint.typeface = typeface
+        computeTextWidthAndHeight()
+        requestLayout()
+        invalidate()
     }
 
-    private void notifyDataSetChanged(int position) {
-        position = Math.min(position, getItemCount() - 1);
-        position = Math.max(position, 0);
-        scrollOffsetYCoordinate = 0;
-        defaultItem = getItem(position);
-        defaultItemPosition = position;
-        currentPosition = position;
-        updatePaintTextAlign();
+    private fun notifyDataSetChanged(position: Int) {
+        var position = position
+        position = Math.min(position, getItemCount() - 1)
+        position = Math.max(position, 0)
+        scrollOffsetYCoordinate = 0
+        defaultItem = getItem<Any>(position)
+        defaultItemPosition = position
+        currentPosition = position
+        updatePaintTextAlign()
         //当设置了选中项文字加大加粗，此处重新计算文字宽高的话滑动会导致其他条目错位
         //computeTextWidthAndHeight();
-        computeFlingLimitYCoordinate();
-        computeIndicatorRect();
-        computeCurrentItemRect();
-        requestLayout();
-        invalidate();
+        computeFlingLimitYCoordinate()
+        computeIndicatorRect()
+        computeCurrentItemRect()
+        requestLayout()
+        invalidate()
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        final int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
-        final int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
-        final int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
-        final int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val modeWidth = MeasureSpec.getMode(widthMeasureSpec)
+        val modeHeight = MeasureSpec.getMode(heightMeasureSpec)
+        val sizeWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val sizeHeight = MeasureSpec.getSize(heightMeasureSpec)
         // Correct sizes of original content
-        int resultWidth = textMaxWidth;
-        int resultHeight = textMaxHeight * visibleItemCount + itemSpace * (visibleItemCount - 1);
+        var resultWidth = textMaxWidth
+        var resultHeight = textMaxHeight * visibleItemCount + itemSpace * (visibleItemCount - 1)
         // Correct view sizes again if curved is enable
         if (curvedEnabled) {
-            resultHeight = (int) (2 * resultHeight / Math.PI);
+            resultHeight = (2 * resultHeight / Math.PI).toInt()
         }
         // Consideration padding influence the view sizes
-        resultWidth += getPaddingLeft() + getPaddingRight();
-        resultHeight += getPaddingTop() + getPaddingBottom();
+        resultWidth += paddingLeft + paddingRight
+        resultHeight += paddingTop + paddingBottom
         // Consideration sizes of parent can influence the view sizes
-        resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
-        resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
-        setMeasuredDimension(resultWidth, resultHeight);
+        resultWidth = measureSize(modeWidth, sizeWidth, resultWidth)
+        resultHeight = measureSize(modeHeight, sizeHeight, resultHeight)
+        setMeasuredDimension(resultWidth, resultHeight)
     }
 
-    private int measureSize(int mode, int sizeExpect, int sizeActual) {
-        int realSize;
+    private fun measureSize(mode: Int, sizeExpect: Int, sizeActual: Int): Int {
+        var realSize: Int
         if (mode == MeasureSpec.EXACTLY) {
-            realSize = sizeExpect;
+            realSize = sizeExpect
         } else {
-            realSize = sizeActual;
+            realSize = sizeActual
             if (mode == MeasureSpec.AT_MOST) {
-                realSize = Math.min(realSize, sizeExpect);
+                realSize = Math.min(realSize, sizeExpect)
             }
         }
-        return realSize;
+        return realSize
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int ow, int oh) {
+    override fun onSizeChanged(w: Int, h: Int, ow: Int, oh: Int) {
         // Set content region
-        rectDrawn.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
-                getHeight() - getPaddingBottom());
+        rectDrawn[paddingLeft, paddingTop, width - paddingRight] = height - paddingBottom
         // Get the center coordinates of content region
-        wheelCenterXCoordinate = rectDrawn.centerX();
-        wheelCenterYCoordinate = rectDrawn.centerY();
+        wheelCenterXCoordinate = rectDrawn.centerX()
+        wheelCenterYCoordinate = rectDrawn.centerY()
         // Correct item drawn center
-        computeDrawnCenterCoordinate();
-        halfWheelHeight = rectDrawn.height() / 2;
-        itemHeight = rectDrawn.height() / visibleItemCount;
-        halfItemHeight = itemHeight / 2;
+        computeDrawnCenterCoordinate()
+        halfWheelHeight = rectDrawn.height() / 2
+        itemHeight = rectDrawn.height() / visibleItemCount
+        halfItemHeight = itemHeight / 2
         // Initialize fling max Y-coordinates
-        computeFlingLimitYCoordinate();
+        computeFlingLimitYCoordinate()
         // Correct region of indicator
-        computeIndicatorRect();
+        computeIndicatorRect()
         // Correct region of current select item
-        computeCurrentItemRect();
+        computeCurrentItemRect()
     }
 
-    private void computeDrawnCenterCoordinate() {
-        switch (textAlign) {
-            case ItemTextAlign.LEFT:
-                drawnCenterXCoordinate = rectDrawn.left;
-                break;
-            case ItemTextAlign.RIGHT:
-                drawnCenterXCoordinate = rectDrawn.right;
-                break;
-            case ItemTextAlign.CENTER:
-            default:
-                drawnCenterXCoordinate = wheelCenterXCoordinate;
-                break;
+    private fun computeDrawnCenterCoordinate() {
+        drawnCenterXCoordinate = when (textAlign) {
+            ItemTextAlign.LEFT -> rectDrawn.left
+            ItemTextAlign.RIGHT -> rectDrawn.right
+            ItemTextAlign.CENTER -> wheelCenterXCoordinate
+            else -> wheelCenterXCoordinate
         }
-        drawnCenterYCoordinate = (int) (wheelCenterYCoordinate -
-                ((paint.ascent() + paint.descent()) / 2));
+        drawnCenterYCoordinate = (wheelCenterYCoordinate - (paint.ascent() + paint.descent()) / 2).toInt()
     }
 
-    private void computeFlingLimitYCoordinate() {
-        int currentItemOffset = defaultItemPosition * itemHeight;
-        minFlingYCoordinate = cyclicEnabled ? Integer.MIN_VALUE
-                : -itemHeight * (getItemCount() - 1) + currentItemOffset;
-        maxFlingYCoordinate = cyclicEnabled ? Integer.MAX_VALUE : currentItemOffset;
+    private fun computeFlingLimitYCoordinate() {
+        val currentItemOffset = defaultItemPosition * itemHeight
+        minFlingYCoordinate = if (cyclicEnabled) Int.MIN_VALUE else -itemHeight * (getItemCount() - 1) + currentItemOffset
+        maxFlingYCoordinate = if (cyclicEnabled) Int.MAX_VALUE else currentItemOffset
     }
 
-    private void computeIndicatorRect() {
+    private fun computeIndicatorRect() {
         if (!indicatorEnabled) {
-            return;
+            return
         }
-        int indicatorSpace = curvedEnabled ? curvedIndicatorSpace : 0;
-        int halfIndicatorSize = (int) (indicatorSize / 2f);
-        int indicatorHeadCenterYCoordinate = wheelCenterYCoordinate + halfItemHeight + indicatorSpace;
-        int indicatorFootCenterYCoordinate = wheelCenterYCoordinate - halfItemHeight - indicatorSpace;
-        rectIndicatorHead.set(rectDrawn.left, indicatorHeadCenterYCoordinate - halfIndicatorSize,
-                rectDrawn.right, indicatorHeadCenterYCoordinate + halfIndicatorSize);
-        rectIndicatorFoot.set(rectDrawn.left, indicatorFootCenterYCoordinate - halfIndicatorSize,
-                rectDrawn.right, indicatorFootCenterYCoordinate + halfIndicatorSize);
+        val indicatorSpace = if (curvedEnabled) curvedIndicatorSpace else 0
+        val halfIndicatorSize = (indicatorSize / 2f).toInt()
+        val indicatorHeadCenterYCoordinate = wheelCenterYCoordinate + halfItemHeight + indicatorSpace
+        val indicatorFootCenterYCoordinate = wheelCenterYCoordinate - halfItemHeight - indicatorSpace
+        rectIndicatorHead[rectDrawn.left, indicatorHeadCenterYCoordinate - halfIndicatorSize, rectDrawn.right] =
+            indicatorHeadCenterYCoordinate + halfIndicatorSize
+        rectIndicatorFoot[rectDrawn.left, indicatorFootCenterYCoordinate - halfIndicatorSize, rectDrawn.right] =
+            indicatorFootCenterYCoordinate + halfIndicatorSize
     }
 
-    private void computeCurrentItemRect() {
-        if (!curtainEnabled && selectedTextColor == 0/* Color.TRANSPARENT */) {
-            return;
+    private fun computeCurrentItemRect() {
+        if (!curtainEnabled && selectedTextColor == 0 /* Color.TRANSPARENT */) {
+            return
         }
-        rectCurrentItem.set(rectDrawn.left, wheelCenterYCoordinate - halfItemHeight,
-                rectDrawn.right, wheelCenterYCoordinate + halfItemHeight);
+        rectCurrentItem[rectDrawn.left, wheelCenterYCoordinate - halfItemHeight, rectDrawn.right] = wheelCenterYCoordinate + halfItemHeight
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    override fun onDraw(canvas: Canvas) {
         if (null != onWheelChangedListener) {
-            onWheelChangedListener.onWheelScrolled(this, scrollOffsetYCoordinate);
+            onWheelChangedListener!!.onWheelScrolled(this, scrollOffsetYCoordinate)
         }
         if (itemHeight - halfDrawnItemCount <= 0) {
-            return;
+            return
         }
-        drawCurtain(canvas);
-        drawIndicator(canvas);
-        drawAllItem(canvas);
+        drawCurtain(canvas)
+        drawIndicator(canvas)
+        drawAllItem(canvas)
     }
 
-    private void drawAllItem(Canvas canvas) {
-        int drawnDataStartPos = -1 * scrollOffsetYCoordinate / itemHeight - halfDrawnItemCount;
-        for (int drawnDataPosition = drawnDataStartPos + defaultItemPosition,
-             drawnOffsetPos = -1 * halfDrawnItemCount;
-             drawnDataPosition < drawnDataStartPos + defaultItemPosition + drawnItemCount;
-             drawnDataPosition++, drawnOffsetPos++) {
-
-            initTextPaint();
-            boolean isCenterItem = drawnDataPosition == drawnDataStartPos + defaultItemPosition + drawnItemCount / 2;
-
-            int drawnItemCenterYCoordinate = drawnCenterYCoordinate + (drawnOffsetPos * itemHeight)
-                    + scrollOffsetYCoordinate % itemHeight;
-            int centerYCoordinateAbs = Math.abs(drawnCenterYCoordinate - drawnItemCenterYCoordinate);
+    private fun drawAllItem(canvas: Canvas) {
+        val drawnDataStartPos = -1 * scrollOffsetYCoordinate / itemHeight - halfDrawnItemCount
+        var drawnDataPosition = drawnDataStartPos + defaultItemPosition
+        var drawnOffsetPos = -1 * halfDrawnItemCount
+        while (drawnDataPosition < drawnDataStartPos + defaultItemPosition + drawnItemCount) {
+            initTextPaint()
+            val isCenterItem = drawnDataPosition == drawnDataStartPos + defaultItemPosition + drawnItemCount / 2
+            val drawnItemCenterYCoordinate = drawnCenterYCoordinate + drawnOffsetPos * itemHeight + scrollOffsetYCoordinate % itemHeight
+            val centerYCoordinateAbs = Math.abs(drawnCenterYCoordinate - drawnItemCenterYCoordinate)
             // Correct ratio of item's drawn center to wheel center
-            float ratio = (drawnCenterYCoordinate - centerYCoordinateAbs - rectDrawn.top) * 1f /
-                    (drawnCenterYCoordinate - rectDrawn.top);
-            float degree = computeDegree(drawnItemCenterYCoordinate, ratio);
-            float distanceToCenter = computeYCoordinateAtAngle(degree);
-
+            val ratio = (drawnCenterYCoordinate - centerYCoordinateAbs - rectDrawn.top) * 1f /
+                    (drawnCenterYCoordinate - rectDrawn.top)
+            val degree = computeDegree(drawnItemCenterYCoordinate, ratio)
+            val distanceToCenter = computeYCoordinateAtAngle(degree)
             if (curvedEnabled) {
-                int transXCoordinate = wheelCenterXCoordinate;
-                switch (textAlign) {
-                    case ItemTextAlign.LEFT:
-                        transXCoordinate = rectDrawn.left;
-                        break;
-                    case ItemTextAlign.RIGHT:
-                        transXCoordinate = rectDrawn.right;
-                        break;
-                    case ItemTextAlign.CENTER:
-                    default:
-                        break;
+                var transXCoordinate = wheelCenterXCoordinate
+                when (textAlign) {
+                    ItemTextAlign.LEFT -> transXCoordinate = rectDrawn.left
+                    ItemTextAlign.RIGHT -> transXCoordinate = rectDrawn.right
+                    ItemTextAlign.CENTER -> {}
+                    else -> {}
                 }
-                float transYCoordinate = wheelCenterYCoordinate - distanceToCenter;
-
-                camera.save();
-                camera.rotateX(degree);
-                camera.getMatrix(matrixRotate);
-                camera.restore();
-                matrixRotate.preTranslate(-transXCoordinate, -transYCoordinate);
-                matrixRotate.postTranslate(transXCoordinate, transYCoordinate);
-
-                camera.save();
-                camera.translate(0, 0, computeDepth(degree));
-                camera.getMatrix(matrixDepth);
-                camera.restore();
-                matrixDepth.preTranslate(-transXCoordinate, -transYCoordinate);
-                matrixDepth.postTranslate(transXCoordinate, transYCoordinate);
-                matrixRotate.postConcat(matrixDepth);
+                val transYCoordinate = wheelCenterYCoordinate - distanceToCenter
+                camera.save()
+                camera.rotateX(degree)
+                camera.getMatrix(matrixRotate)
+                camera.restore()
+                matrixRotate.preTranslate(-transXCoordinate.toFloat(), -transYCoordinate)
+                matrixRotate.postTranslate(transXCoordinate.toFloat(), transYCoordinate)
+                camera.save()
+                camera.translate(0f, 0f, computeDepth(degree).toFloat())
+                camera.getMatrix(matrixDepth)
+                camera.restore()
+                matrixDepth.preTranslate(-transXCoordinate.toFloat(), -transYCoordinate)
+                matrixDepth.postTranslate(transXCoordinate.toFloat(), transYCoordinate)
+                matrixRotate.postConcat(matrixDepth)
             }
-
-            computeAndSetAtmospheric(centerYCoordinateAbs);
+            computeAndSetAtmospheric(centerYCoordinateAbs)
             // Correct item's drawn center Y coordinate base on curved state
-            float drawCenterYCoordinate = curvedEnabled ? drawnCenterYCoordinate - distanceToCenter
-                    : drawnItemCenterYCoordinate;
-            drawItemRect(canvas, drawnDataPosition, isCenterItem, drawCenterYCoordinate);
+            val drawCenterYCoordinate = if (curvedEnabled) drawnCenterYCoordinate - distanceToCenter else drawnItemCenterYCoordinate.toFloat()
+            drawItemRect(canvas, drawnDataPosition, isCenterItem, drawCenterYCoordinate)
+            drawnDataPosition++
+            drawnOffsetPos++
         }
     }
 
-    private void drawItemRect(Canvas canvas, int dataPosition, boolean isCenterItem, float drawCenterYCoordinate) {
+    private fun drawItemRect(canvas: Canvas, dataPosition: Int, isCenterItem: Boolean, drawCenterYCoordinate: Float) {
         // Judges need to draw different color for current item or not
-        if (selectedTextColor == 0/* Color.TRANSPARENT */) {
+        if (selectedTextColor == 0 /* Color.TRANSPARENT */) {
             //没有设置选中项颜色，绘制所有项
-            canvas.save();
-            canvas.clipRect(rectDrawn);
+            canvas.save()
+            canvas.clipRect(rectDrawn)
             if (curvedEnabled) {
-                canvas.concat(matrixRotate);
+                canvas.concat(matrixRotate)
             }
-            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
-            canvas.restore();
-            return;
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate)
+            canvas.restore()
+            return
         }
-
         if (textSize == selectedTextSize && !selectedTextBold) {
             //没有设置选中项的加大加粗，绘制所有项
-            canvas.save();
+            canvas.save()
             if (curvedEnabled) {
-                canvas.concat(matrixRotate);
+                canvas.concat(matrixRotate)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                canvas.clipOutRect(rectCurrentItem);
+                canvas.clipOutRect(rectCurrentItem)
             } else {
-                canvas.clipRect(rectCurrentItem, Region.Op.DIFFERENCE);
+                canvas.clipRect(rectCurrentItem, Region.Op.DIFFERENCE)
             }
-            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
-            canvas.restore();
-            paint.setColor(selectedTextColor);
-            canvas.save();
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate)
+            canvas.restore()
+            paint.color = selectedTextColor
+            canvas.save()
             if (curvedEnabled) {
-                canvas.concat(matrixRotate);
+                canvas.concat(matrixRotate)
             }
-            canvas.clipRect(rectCurrentItem);
-            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
-            canvas.restore();
-            return;
+            canvas.clipRect(rectCurrentItem)
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate)
+            canvas.restore()
+            return
         }
-
         if (!isCenterItem) {
             // 绘制非选中项
-            canvas.save();
+            canvas.save()
             if (curvedEnabled) {
-                canvas.concat(matrixRotate);
+                canvas.concat(matrixRotate)
             }
-            drawItemText(canvas, dataPosition, drawCenterYCoordinate);
-            canvas.restore();
-            return;
+            drawItemText(canvas, dataPosition, drawCenterYCoordinate)
+            canvas.restore()
+            return
         }
 
         // 绘制选中项
-        paint.setColor(selectedTextColor);
-        paint.setTextSize(selectedTextSize);
-        paint.setFakeBoldText(selectedTextBold);
-        canvas.save();
+        paint.color = selectedTextColor
+        paint.textSize = selectedTextSize
+        paint.isFakeBoldText = selectedTextBold
+        canvas.save()
         if (curvedEnabled) {
-            canvas.concat(matrixRotate);
+            canvas.concat(matrixRotate)
         }
-        drawItemText(canvas, dataPosition, drawCenterYCoordinate);
-        canvas.restore();
+        drawItemText(canvas, dataPosition, drawCenterYCoordinate)
+        canvas.restore()
     }
 
-    private void drawItemText(Canvas canvas, int dataPosition, float drawCenterYCoordinate) {
-        boolean hasCut = false;
-        String ellipsis = "...";
-        int measuredWidth = getMeasuredWidth();
-        float ellipsisWidth = paint.measureText(ellipsis);
-        String data = obtainItemText(dataPosition);
+    private fun drawItemText(canvas: Canvas, dataPosition: Int, drawCenterYCoordinate: Float) {
+        var hasCut = false
+        val ellipsis = "..."
+        val measuredWidth = measuredWidth
+        val ellipsisWidth = paint.measureText(ellipsis)
+        var data = obtainItemText(dataPosition)
         while (paint.measureText(data) + ellipsisWidth - measuredWidth > 0) {
             // 超出控件宽度则省略部分文字
-            int length = data.length();
+            val length = data!!.length
             if (length > 1) {
-                data = data.substring(0, length - 1);
-                hasCut = true;
+                data = data.substring(0, length - 1)
+                hasCut = true
             }
         }
         if (hasCut) {
-            data = data + ellipsis;
+            data = data + ellipsis
         }
-        canvas.drawText(data, drawnCenterXCoordinate, drawCenterYCoordinate, paint);
+        canvas.drawText(data!!, drawnCenterXCoordinate.toFloat(), drawCenterYCoordinate, paint)
     }
 
-    private float computeDegree(int drawnItemCenterYCoordinate, float ratio) {
+    private fun computeDegree(drawnItemCenterYCoordinate: Int, ratio: Float): Float {
         // Correct unit
-        int unit = 0;
+        var unit = 0
         if (drawnItemCenterYCoordinate > drawnCenterYCoordinate) {
-            unit = 1;
+            unit = 1
         } else if (drawnItemCenterYCoordinate < drawnCenterYCoordinate) {
-            unit = -1;
+            unit = -1
         }
-        return clamp((-(1 - ratio) * curvedMaxAngle * unit), -curvedMaxAngle, curvedMaxAngle);
+        return clamp(-(1 - ratio) * curvedMaxAngle * unit, -curvedMaxAngle.toFloat(), curvedMaxAngle.toFloat())
     }
 
-    private float clamp(float value, float min, float max) {
-        if (value < min) {
-            return min;
-        }
-        return Math.min(value, max);
+    private fun clamp(value: Float, min: Float, max: Float): Float {
+        return if (value < min) {
+            min
+        } else Math.min(value, max)
     }
 
-    private String obtainItemText(int drawnDataPosition) {
-        String data = "";
-        final int itemCount = getItemCount();
+    private fun obtainItemText(drawnDataPosition: Int): String? {
+        var data: String? = ""
+        val itemCount = getItemCount()
         if (cyclicEnabled) {
             if (itemCount != 0) {
-                int actualPosition = drawnDataPosition % itemCount;
-                actualPosition = actualPosition < 0 ? (actualPosition + itemCount) : actualPosition;
-                data = formatItem(actualPosition);
+                var actualPosition = drawnDataPosition % itemCount
+                actualPosition = if (actualPosition < 0) actualPosition + itemCount else actualPosition
+                data = formatItem(actualPosition)
             }
         } else {
             if (isPositionInRange(drawnDataPosition, itemCount)) {
-                data = formatItem(drawnDataPosition);
+                data = formatItem(drawnDataPosition)
             }
         }
-        return data;
+        return data
     }
 
-    public String formatItem(int position) {
-        return formatItem(getItem(position));
+    fun formatItem(position: Int): String? {
+        return formatItem(getItem<Any>(position))
     }
 
-    public String formatItem(Object item) {
+    fun formatItem(item: Any?): String? {
         if (item == null) {
-            return "";
+            return ""
         }
-        if (item instanceof TextProvider) {
-            return ((TextProvider) item).provideText();
+        if (item is TextProvider) {
+            return item.provideText()
         }
-        if (formatter != null) {
-            return formatter.formatItem(item);
-        }
-        return item.toString();
+        return if (formatter != null) {
+            formatter!!.formatItem(item)
+        } else item.toString()
     }
 
-    private void computeAndSetAtmospheric(int abs) {
+    private fun computeAndSetAtmospheric(abs: Int) {
         if (atmosphericEnabled) {
-            int alpha = (int) ((drawnCenterYCoordinate - abs) * 1.0F / drawnCenterYCoordinate * 255);
-            alpha = Math.max(alpha, 0);
-            paint.setAlpha(alpha);
+            var alpha = ((drawnCenterYCoordinate - abs) * 1.0f / drawnCenterYCoordinate * 255).toInt()
+            alpha = Math.max(alpha, 0)
+            paint.alpha = alpha
         }
     }
 
-    private void drawCurtain(Canvas canvas) {
+    private fun drawCurtain(canvas: Canvas) {
         // Need to draw curtain or not
         if (!curtainEnabled) {
-            return;
+            return
         }
-        int red = Color.red(curtainColor);
-        int green = Color.green(curtainColor);
-        int blue = Color.blue(curtainColor);
-        paint.setColor(Color.argb(128, red, green, blue));
-        paint.setStyle(Paint.Style.FILL);
+        val red = Color.red(curtainColor)
+        val green = Color.green(curtainColor)
+        val blue = Color.blue(curtainColor)
+        paint.color = Color.argb(128, red, green, blue)
+        paint.style = Paint.Style.FILL
         if (curtainRadius > 0) {
-            Path path = new Path();
-            float[] radii;
-            switch (curtainCorner) {
-                case CurtainCorner.ALL:
-                    radii = new float[]{
-                            curtainRadius, curtainRadius, curtainRadius, curtainRadius,
-                            curtainRadius, curtainRadius, curtainRadius, curtainRadius
-                    };
-                    break;
-                case CurtainCorner.TOP:
-                    radii = new float[]{
-                            curtainRadius, curtainRadius, curtainRadius, curtainRadius, 0, 0, 0, 0
-                    };
-                    break;
-                case CurtainCorner.BOTTOM:
-                    radii = new float[]{
-                            0, 0, 0, 0, curtainRadius, curtainRadius, curtainRadius, curtainRadius
-                    };
-                    break;
-                case CurtainCorner.LEFT:
-                    radii = new float[]{
-                            curtainRadius, curtainRadius, 0, 0, 0, 0, curtainRadius, curtainRadius
-                    };
-                    break;
-                case CurtainCorner.RIGHT:
-                    radii = new float[]{
-                            0, 0, curtainRadius, curtainRadius, curtainRadius, curtainRadius, 0, 0
-                    };
-                    break;
-                default:
-                    radii = new float[]{0, 0, 0, 0, 0, 0, 0, 0};
-                    break;
+            val path = Path()
+            val radii: FloatArray
+            radii = when (curtainCorner) {
+                CurtainCorner.ALL -> floatArrayOf(
+                    curtainRadius, curtainRadius, curtainRadius, curtainRadius,
+                    curtainRadius, curtainRadius, curtainRadius, curtainRadius
+                )
+                CurtainCorner.TOP -> floatArrayOf(
+                    curtainRadius, curtainRadius, curtainRadius, curtainRadius, 0f, 0f, 0f, 0f
+                )
+                CurtainCorner.BOTTOM -> floatArrayOf(
+                    0f, 0f, 0f, 0f, curtainRadius, curtainRadius, curtainRadius, curtainRadius
+                )
+                CurtainCorner.LEFT -> floatArrayOf(
+                    curtainRadius, curtainRadius, 0f, 0f, 0f, 0f, curtainRadius, curtainRadius
+                )
+                CurtainCorner.RIGHT -> floatArrayOf(
+                    0f, 0f, curtainRadius, curtainRadius, curtainRadius, curtainRadius, 0f, 0f
+                )
+                else -> floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
             }
-            path.addRoundRect(new RectF(rectCurrentItem), radii, Path.Direction.CCW);
-            canvas.drawPath(path, paint);
-            return;
+            path.addRoundRect(RectF(rectCurrentItem), radii, Path.Direction.CCW)
+            canvas.drawPath(path, paint)
+            return
         }
-        canvas.drawRect(rectCurrentItem, paint);
+        canvas.drawRect(rectCurrentItem, paint)
     }
 
-    private void drawIndicator(Canvas canvas) {
+    private fun drawIndicator(canvas: Canvas) {
         // Need to draw indicator or not
         if (!indicatorEnabled) {
-            return;
+            return
         }
-        paint.setColor(indicatorColor);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(rectIndicatorHead, paint);
-        canvas.drawRect(rectIndicatorFoot, paint);
+        paint.color = indicatorColor
+        paint.style = Paint.Style.FILL
+        canvas.drawRect(rectIndicatorHead, paint)
+        canvas.drawRect(rectIndicatorFoot, paint)
     }
 
-    private boolean isPositionInRange(int position, int itemCount) {
-        return position >= 0 && position < itemCount;
+    private fun isPositionInRange(position: Int, itemCount: Int): Boolean {
+        return position >= 0 && position < itemCount
     }
 
-    private float computeYCoordinateAtAngle(float degree) {
+    private fun computeYCoordinateAtAngle(degree: Float): Float {
         // Compute y-coordinate for item at degree.
-        return sinDegree(degree) / sinDegree(curvedMaxAngle) * halfWheelHeight;
+        return sinDegree(degree) / sinDegree(curvedMaxAngle.toFloat()) * halfWheelHeight
     }
 
-    private float sinDegree(float degree) {
-        return (float) Math.sin(Math.toRadians(degree));
+    private fun sinDegree(degree: Float): Float {
+        return Math.sin(Math.toRadians(degree.toDouble())).toFloat()
     }
 
-    private int computeDepth(float degree) {
-        return (int) (halfWheelHeight - Math.cos(Math.toRadians(degree)) * halfWheelHeight);
+    private fun computeDepth(degree: Float): Int {
+        return (halfWheelHeight - Math.cos(Math.toRadians(degree.toDouble())) * halfWheelHeight).toInt()
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (isEnabled()) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    handleActionDown(event);
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    handleActionMove(event);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    handleActionUp(event);
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                    handleActionCancel(event);
-                    break;
-                default:
-                    break;
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (isEnabled) {
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> handleActionDown(event)
+                MotionEvent.ACTION_MOVE -> handleActionMove(event)
+                MotionEvent.ACTION_UP -> handleActionUp(event)
+                MotionEvent.ACTION_CANCEL -> handleActionCancel(event)
+                else -> {}
             }
         }
         if (isClick) {
             //onTouchEvent should call performClick when a click is detected
-            performClick();
+            performClick()
         }
-        return true;
+        return true
     }
 
-    private void handleActionDown(MotionEvent event) {
-        if (null != getParent()) {
-            getParent().requestDisallowInterceptTouchEvent(true);
+    private fun handleActionDown(event: MotionEvent) {
+        if (null != parent) {
+            parent.requestDisallowInterceptTouchEvent(true)
         }
-        obtainOrClearTracker();
-        tracker.addMovement(event);
-        if (!scroller.isFinished()) {
-            scroller.abortAnimation();
-            isForceFinishScroll = true;
+        obtainOrClearTracker()
+        tracker!!.addMovement(event)
+        if (!scroller.isFinished) {
+            scroller.abortAnimation()
+            isForceFinishScroll = true
         }
-        downPointYCoordinate = lastPointYCoordinate = (int) event.getY();
+        lastPointYCoordinate = event.y.toInt()
+        downPointYCoordinate = lastPointYCoordinate
     }
 
-    private void handleActionMove(MotionEvent event) {
-        int endPoint = computeDistanceToEndPoint(scroller.getFinalY() % itemHeight);
-        if (Math.abs(downPointYCoordinate - event.getY()) < touchSlop && endPoint > 0) {
-            isClick = true;
-            return;
+    private fun handleActionMove(event: MotionEvent) {
+        val endPoint = computeDistanceToEndPoint(scroller.finalY % itemHeight)
+        if (Math.abs(downPointYCoordinate - event.y) < touchSlop && endPoint > 0) {
+            isClick = true
+            return
         }
-        isClick = false;
+        isClick = false
         if (null != tracker) {
-            tracker.addMovement(event);
+            tracker!!.addMovement(event)
         }
         if (null != onWheelChangedListener) {
-            onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.DRAGGING);
+            onWheelChangedListener!!.onWheelScrollStateChanged(this, ScrollState.DRAGGING)
         }
         // Scroll WheelPicker's content
-        float move = event.getY() - lastPointYCoordinate;
+        val move = event.y - lastPointYCoordinate
         if (Math.abs(move) < 1) {
-            return;
+            return
         }
-        scrollOffsetYCoordinate += move;
-        lastPointYCoordinate = (int) event.getY();
-        invalidate();
+        scrollOffsetYCoordinate += move.toInt()
+        lastPointYCoordinate = event.y.toInt()
+        invalidate()
     }
 
-    private void handleActionUp(MotionEvent event) {
-        if (null != getParent()) {
-            getParent().requestDisallowInterceptTouchEvent(false);
+    private fun handleActionUp(event: MotionEvent) {
+        if (null != parent) {
+            parent.requestDisallowInterceptTouchEvent(false)
         }
         if (isClick) {
-            return;
+            return
         }
-        int yVelocity = 0;
+        var yVelocity = 0
         if (null != tracker) {
-            tracker.addMovement(event);
-            tracker.computeCurrentVelocity(1000, maximumVelocity);
-            yVelocity = (int) tracker.getYVelocity();
+            tracker!!.addMovement(event)
+            tracker!!.computeCurrentVelocity(1000, maximumVelocity.toFloat())
+            yVelocity = tracker!!.yVelocity.toInt()
         }
 
         // Judge scroll or fling base on current velocity
-        isForceFinishScroll = false;
+        isForceFinishScroll = false
         if (Math.abs(yVelocity) > minimumVelocity) {
-            scroller.fling(0, scrollOffsetYCoordinate, 0, yVelocity, 0,
-                    0, minFlingYCoordinate, maxFlingYCoordinate);
-            int endPoint = computeDistanceToEndPoint(scroller.getFinalY() % itemHeight);
-            scroller.setFinalY(scroller.getFinalY() + endPoint);
+            scroller.fling(
+                0, scrollOffsetYCoordinate, 0, yVelocity, 0,
+                0, minFlingYCoordinate, maxFlingYCoordinate
+            )
+            val endPoint = computeDistanceToEndPoint(scroller.finalY % itemHeight)
+            scroller.finalY = scroller.finalY + endPoint
         } else {
-            int endPoint = computeDistanceToEndPoint(scrollOffsetYCoordinate % itemHeight);
-            scroller.startScroll(0, scrollOffsetYCoordinate, 0, endPoint);
+            val endPoint = computeDistanceToEndPoint(scrollOffsetYCoordinate % itemHeight)
+            scroller.startScroll(0, scrollOffsetYCoordinate, 0, endPoint)
         }
         // Correct coordinates
         if (!cyclicEnabled) {
-            if (scroller.getFinalY() > maxFlingYCoordinate) {
-                scroller.setFinalY(maxFlingYCoordinate);
-            } else if (scroller.getFinalY() < minFlingYCoordinate) {
-                scroller.setFinalY(minFlingYCoordinate);
+            if (scroller.finalY > maxFlingYCoordinate) {
+                scroller.finalY = maxFlingYCoordinate
+            } else if (scroller.finalY < minFlingYCoordinate) {
+                scroller.finalY = minFlingYCoordinate
             }
         }
-        handler.post(this);
-        cancelTracker();
+        handler.post(this)
+        cancelTracker()
     }
 
-    private void handleActionCancel(MotionEvent event) {
-        if (null != getParent()) {
-            getParent().requestDisallowInterceptTouchEvent(false);
+    private fun handleActionCancel(event: MotionEvent) {
+        if (null != parent) {
+            parent.requestDisallowInterceptTouchEvent(false)
         }
-        cancelTracker();
+        cancelTracker()
     }
 
-    private void obtainOrClearTracker() {
+    private fun obtainOrClearTracker() {
         if (null == tracker) {
-            tracker = VelocityTracker.obtain();
+            tracker = VelocityTracker.obtain()
         } else {
-            tracker.clear();
+            tracker!!.clear()
         }
     }
 
-    private void cancelTracker() {
+    private fun cancelTracker() {
         if (null != tracker) {
-            tracker.recycle();
-            tracker = null;
+            tracker!!.recycle()
+            tracker = null
         }
     }
 
-    @Override
-    public boolean performClick() {
-        return super.performClick();
+    override fun performClick(): Boolean {
+        return super.performClick()
     }
 
-    private int computeDistanceToEndPoint(int remainder) {
-        if (Math.abs(remainder) > halfItemHeight) {
+    private fun computeDistanceToEndPoint(remainder: Int): Int {
+        return if (Math.abs(remainder) > halfItemHeight) {
             if (scrollOffsetYCoordinate < 0) {
-                return -itemHeight - remainder;
+                -itemHeight - remainder
             } else {
-                return itemHeight - remainder;
+                itemHeight - remainder
             }
         } else {
-            return -1 * remainder;
+            -1 * remainder
         }
     }
 
-    @Override
-    public void run() {
+    override fun run() {
         if (itemHeight == 0) {
-            return;
+            return
         }
-        int itemCount = getItemCount();
+        val itemCount = getItemCount()
         if (itemCount == 0) {
             if (null != onWheelChangedListener) {
-                onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.IDLE);
+                onWheelChangedListener!!.onWheelScrollStateChanged(this, ScrollState.IDLE)
             }
-            return;
+            return
         }
-        if (scroller.isFinished() && !isForceFinishScroll) {
-            int position = computePosition(itemCount);
-            position = position < 0 ? position + itemCount : position;
-            currentPosition = position;
+        if (scroller.isFinished && !isForceFinishScroll) {
+            var position = computePosition(itemCount)
+            position = if (position < 0) position + itemCount else position
+            currentPosition = position
             if (null != onWheelChangedListener) {
-                onWheelChangedListener.onWheelSelected(this, position);
-                onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.IDLE);
+                onWheelChangedListener!!.onWheelSelected(this, position)
+                onWheelChangedListener!!.onWheelScrollStateChanged(this, ScrollState.IDLE)
             }
-            postInvalidate();
-            return;
+            postInvalidate()
+            return
         }
         // Scroll not finished
         if (scroller.computeScrollOffset()) {
             if (null != onWheelChangedListener) {
-                onWheelChangedListener.onWheelScrollStateChanged(this, ScrollState.SCROLLING);
+                onWheelChangedListener!!.onWheelScrollStateChanged(this, ScrollState.SCROLLING)
             }
-            scrollOffsetYCoordinate = scroller.getCurrY();
-            int position = computePosition(itemCount);
+            scrollOffsetYCoordinate = scroller.currY
+            val position = computePosition(itemCount)
             if (lastScrollPosition != position) {
                 if (position == 0 && lastScrollPosition == itemCount - 1) {
                     if (null != onWheelChangedListener) {
-                        onWheelChangedListener.onWheelLoopFinished(this);
+                        onWheelChangedListener!!.onWheelLoopFinished(this)
                     }
                 }
-                lastScrollPosition = position;
+                lastScrollPosition = position
             }
-            postInvalidate();
-            handler.postDelayed(this, 20);
+            postInvalidate()
+            handler.postDelayed(this, 20)
         }
     }
 
-    private int computePosition(int itemCount) {
-        return (-1 * scrollOffsetYCoordinate / itemHeight + defaultItemPosition) % itemCount;
+    private fun computePosition(itemCount: Int): Int {
+        return (-1 * scrollOffsetYCoordinate / itemHeight + defaultItemPosition) % itemCount
     }
 
-    public void scrollTo(final int position) {
-        post(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChanged(position);
-            }
-        });
+    fun scrollTo(position: Int) {
+        post { notifyDataSetChanged(position) }
     }
 
-    public final void smoothScrollTo(final int position) {
-        if (isInEditMode()) {
-            scrollTo(position);
-            return;
+    fun smoothScrollTo(position: Int) {
+        if (isInEditMode) {
+            scrollTo(position)
+            return
         }
-        int differencesLines = currentPosition - position;
-        int newScrollOffsetYCoordinate = scrollOffsetYCoordinate + (differencesLines * itemHeight);
-        ValueAnimator animator = ValueAnimator.ofInt(scrollOffsetYCoordinate, newScrollOffsetYCoordinate);
-        animator.setDuration(300);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                scrollOffsetYCoordinate = (int) animation.getAnimatedValue();
-                invalidate();
+        val differencesLines = currentPosition - position
+        val newScrollOffsetYCoordinate = scrollOffsetYCoordinate + differencesLines * itemHeight
+        val animator = ValueAnimator.ofInt(scrollOffsetYCoordinate, newScrollOffsetYCoordinate)
+        animator.duration = 300
+        animator.addUpdateListener { animation ->
+            scrollOffsetYCoordinate = animation.animatedValue as Int
+            invalidate()
+        }
+        animator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                scrollTo(position)
             }
-        });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                scrollTo(position);
-            }
-        });
-        animator.start();
+        })
+        animator.start()
     }
 
+    companion object {
+        @Deprecated("")
+        val SCROLL_STATE_IDLE = ScrollState.IDLE
+
+        @Deprecated("")
+        val SCROLL_STATE_DRAGGING = ScrollState.DRAGGING
+
+        @Deprecated("")
+        val SCROLL_STATE_SCROLLING = ScrollState.SCROLLING
+    }
 }
-

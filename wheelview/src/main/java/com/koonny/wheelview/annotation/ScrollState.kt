@@ -1,11 +1,10 @@
-package com.koonny.wheelview.annotation;
+package com.koonny.wheelview.annotation
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention(RetentionPolicy.SOURCE)
-public @interface ScrollState {
-    int IDLE = 0;
-    int DRAGGING = 1;
-    int SCROLLING = 2;
+@Retention(AnnotationRetention.SOURCE)
+annotation class ScrollState {
+    companion object {
+        var IDLE = 0
+        var DRAGGING = 1
+        var SCROLLING = 2
+    }
 }

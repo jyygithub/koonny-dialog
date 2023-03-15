@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="WheelDefault">
+    <style name="Widget.Koonny.WheelView" parent="">
         <item name="wheel_visibleItemCount">5</item>
         <item name="wheel_itemTextAlign">center</item>
         <item name="wheel_itemSpace">30dp</item>

@@ -1,14 +1,10 @@
-package com.koonny.wheelview.annotation;
+package com.koonny.wheelview.annotation
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-/**
- * 滚轮条目文本对齐方式
- */
-@Retention(RetentionPolicy.SOURCE)
-public @interface ItemTextAlign {
-    int CENTER = 0;
-    int LEFT = 1;
-    int RIGHT = 2;
+@Retention(AnnotationRetention.SOURCE)
+annotation class ItemTextAlign {
+    companion object {
+        var CENTER = 0
+        var LEFT = 1
+        var RIGHT = 2
+    }
 }

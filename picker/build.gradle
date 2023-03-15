@@ -34,11 +34,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation project(path: ':wheelview')
+    implementation 'com.koonny.wheelview:wheelview:0.0.1.100-SNAPSHOT'
 }
 
 group = 'com.koonny.dialog'
-version = '0.0.1.200-SNAPSHOT'
+version = '0.0.1.202-SNAPSHOT'
 
 publishing {
     publications {

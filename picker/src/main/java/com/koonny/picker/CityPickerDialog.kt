@@ -84,11 +84,11 @@ class CityPickerDialog : BottomSheetDialogFragment(), WheelFormatter, OnWheelCha
         if (orgData.isNullOrEmpty()) return
         if (view?.id == R.id.wheelView2) return
         if (view?.id == R.id.wheelView1) {
-            wheelView2.setData(orgData!![wheelView0.currentPosition].children!![wheelView1.currentPosition].children)
+            wheelView2.data = orgData!![wheelView0.currentPosition].children!![wheelView1.currentPosition].children
         }
         if (view?.id == R.id.wheelView0) {
-            wheelView1.setData(orgData!![wheelView0.currentPosition].children)
-            wheelView2.setData(orgData!![wheelView0.currentPosition].children!![wheelView1.currentPosition].children)
+            wheelView1.data = orgData!![wheelView0.currentPosition].children
+            wheelView2.data = orgData!![wheelView0.currentPosition].children!![wheelView1.currentPosition].children
         }
 
     }

@@ -1,16 +1,11 @@
-package com.koonny.wheelview.contract;
+package com.koonny.wheelview.contract
 
-import com.koonny.wheelview.WheelView;
-import com.koonny.wheelview.annotation.ScrollState;
+import com.koonny.wheelview.widget.WheelView
+import com.koonny.wheelview.annotation.ScrollState
 
-public interface OnWheelChangedListener {
-
-    void onWheelScrolled(WheelView view, int offset);
-
-    void onWheelSelected(WheelView view, int position);
-
-    void onWheelScrollStateChanged(WheelView view, @ScrollState int state);
-
-    void onWheelLoopFinished(WheelView view);
-
+interface OnWheelChangedListener {
+    fun onWheelScrolled(view: WheelView?, offset: Int)
+    fun onWheelSelected(view: WheelView?, position: Int)
+    fun onWheelScrollStateChanged(view: WheelView?, @ScrollState state: Int)
+    fun onWheelLoopFinished(view: WheelView?)
 }

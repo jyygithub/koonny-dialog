@@ -1,14 +1,13 @@
-package com.koonny.wheelview.annotation;
+package com.koonny.wheelview.annotation
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@Retention(RetentionPolicy.SOURCE)
-public @interface CurtainCorner {
-    int NONE = 0;
-    int ALL = 1;
-    int TOP = 2;
-    int BOTTOM = 3;
-    int LEFT = 4;
-    int RIGHT = 5;
+@Retention(AnnotationRetention.SOURCE)
+annotation class CurtainCorner {
+    companion object {
+        var NONE = 0
+        var ALL = 1
+        var TOP = 2
+        var BOTTOM = 3
+        var LEFT = 4
+        var RIGHT = 5
+    }
 }
