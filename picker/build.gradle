@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.koonny.dialog'
+    namespace 'com.koonny.picker'
     compileSdk 33
 
     defaultConfig {
@@ -32,7 +32,9 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation project(path: ':wheelview')
 }
 
 group = 'com.koonny.dialog'
@@ -44,10 +46,10 @@ publishing {
             afterEvaluate {
                 artifact(tasks.getByName("bundleReleaseAar"))
             }
-            artifactId = 'dialog'
+            artifactId = 'picker'
             pom {
-                name = 'dialog'
-                description = 'A android module'
+                name = 'picker'
+                description = 'picker'
                 url = 'https://github.com/jyygithub/koonny-dialog'
                 licenses {
                     license {

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace 'com.koonny.dialog'
+    namespace 'com.koonny.wheelview'
     compileSdk 33
 
     defaultConfig {
@@ -32,7 +32,6 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 }
 
 group = 'com.koonny.dialog'
@@ -44,10 +43,10 @@ publishing {
             afterEvaluate {
                 artifact(tasks.getByName("bundleReleaseAar"))
             }
-            artifactId = 'dialog'
+            artifactId = 'wheelview'
             pom {
-                name = 'dialog'
-                description = 'A android module'
+                name = 'wheelview'
+                description = 'wheelview'
                 url = 'https://github.com/jyygithub/koonny-dialog'
                 licenses {
                     license {

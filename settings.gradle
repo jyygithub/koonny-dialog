@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "koonny-dialog"
 include ':sample'
 include ':dialog'
+include ':wheelview'
+include ':picker'
