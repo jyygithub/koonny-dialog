@@ -9,7 +9,7 @@ import com.koonny.dialog.R
 
 class BottomListAdapter<T : Any>(private val bind: ((T) -> String)?) : RecyclerView.Adapter<BottomListAdapter.ViewHolder>() {
 
-    private var data = emptyList<T>()
+    private var data = mutableListOf<T>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val btn = itemView.findViewById<TextView>(R.id.btn)
@@ -30,13 +30,15 @@ class BottomListAdapter<T : Any>(private val bind: ((T) -> String)?) : RecyclerV
 
     private var items: ((position: Int) -> Unit)? = null
 
-    fun getItem(position: Int): T = data[position]
+    fun getItem(position: Int): T {
+        return data[position]
+    }
 
     fun items(block: (position: Int) -> Unit) {
         this.items = block
     }
 
-    fun setList(data: List<T>) {
+    fun setList(data: MutableList<T>) {
         this.data = data
         notifyDataSetChanged()
     }

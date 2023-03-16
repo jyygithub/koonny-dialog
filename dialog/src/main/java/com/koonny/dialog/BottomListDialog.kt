@@ -20,7 +20,7 @@ class BottomListDialog<T : Any> : BaseDialogFragment(R.layout.koonny_dialog_bott
     private var mTitle: CharSequence? = null
     private var mNegativeText: CharSequence? = "取消"
 
-    private var mItems = emptyList<T>()
+    private var mItems = mutableListOf<T>()
     private var mItemBlock: ((position: Int, item: T) -> Unit)? = null
     private var mItemBind: ((T) -> String)? = null
 
@@ -94,12 +94,12 @@ class BottomListDialog<T : Any> : BaseDialogFragment(R.layout.koonny_dialog_bott
     }
 
     fun items(vararg items: T, block: (position: Int, item: T) -> Unit): BottomListDialog<T> {
-        mItems = items.toList()
+        mItems = items.toMutableList()
         this.mItemBlock = block
         return this
     }
 
-    fun items(items: List<T>, block: (position: Int, item: T) -> Unit): BottomListDialog<T> {
+    fun items(items: MutableList<T>, block: (position: Int, item: T) -> Unit): BottomListDialog<T> {
         mItems = items
         this.mItemBlock = block
         return this

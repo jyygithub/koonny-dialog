@@ -11,7 +11,7 @@ import com.koonny.dialog.base.asRoundRadii
 
 class BottomMenuAdapter : RecyclerView.Adapter<BottomMenuAdapter.ViewHolder>() {
 
-    private var data = emptyList<Pair<String, Int>>()
+    private var data = mutableListOf<Pair<String, Int>>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
@@ -38,7 +38,7 @@ class BottomMenuAdapter : RecyclerView.Adapter<BottomMenuAdapter.ViewHolder>() {
         this.items = block
     }
 
-    fun setList(data: List<Pair<String, Int>>) {
+    fun setList(data: MutableList<Pair<String, Int>>) {
         this.data = data
         notifyDataSetChanged()
     }

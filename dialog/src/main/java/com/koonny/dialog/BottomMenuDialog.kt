@@ -20,7 +20,7 @@ class BottomMenuDialog : BaseDialogFragment(R.layout.koonny_dialog_bottom_menu) 
     private var mTitle: CharSequence? = null
     private var mNegativeText: CharSequence? = "取消"
 
-    private var mItems = emptyList<Pair<String, Int>>()
+    private var mItems = mutableListOf<Pair<String, Int>>()
     private var mItemBlock: ((position: Int) -> Unit)? = null
 
     private var mTitleConfig: (TextView.() -> Unit)? = null
@@ -87,12 +87,12 @@ class BottomMenuDialog : BaseDialogFragment(R.layout.koonny_dialog_bottom_menu) 
     }
 
     fun items(vararg items: Pair<String, Int>, block: (position: Int) -> Unit): BottomMenuDialog {
-        mItems = items.toList()
+        mItems = items.toMutableList()
         this.mItemBlock = block
         return this
     }
 
-    fun items(items: List<Pair<String, Int>>, block: (position: Int) -> Unit): BottomMenuDialog {
+    fun items(items: MutableList<Pair<String, Int>>, block: (position: Int) -> Unit): BottomMenuDialog {
         mItems = items
         this.mItemBlock = block
         return this
