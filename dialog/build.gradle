@@ -36,7 +36,7 @@ dependencies {
 }
 
 group = 'com.koonny.dialog'
-version = '0.0.1.201-SNAPSHOT'
+version = '0.0.1.202-SNAPSHOT'
 
 publishing {
     publications {

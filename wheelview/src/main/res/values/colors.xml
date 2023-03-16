@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="koonny_wheelview_text_color">#888888</color>
-    <color name="koonny_wheelview_select_text_color">#000000</color>
-    <color name="koonny_wheelview_divider_color">#DEDEDE</color>
-</resources>

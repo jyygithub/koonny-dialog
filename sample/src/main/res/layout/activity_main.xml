@@ -15,9 +15,4 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/recycler_item" />
 
-    <com.koonny.wheelview.widget.WheelView
-        android:id="@+id/wheelview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
 </LinearLayout>

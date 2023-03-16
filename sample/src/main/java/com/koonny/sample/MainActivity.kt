@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.koonny.dialog.BottomListDialog
 import com.koonny.dialog.BottomMenuDialog
 import com.koonny.dialog.ConfirmDialog
-import com.koonny.wheelview.widget.WheelView
 
 class MainActivity : AppCompatActivity() {
 
@@ -63,11 +62,6 @@ class MainActivity : AppCompatActivity() {
                 4 -> CustomDialog()
                     .show(supportFragmentManager)
             }
-        }
-
-        findViewById<WheelView>(R.id.wheelview).apply {
-            setStyle(com.koonny.wheelview.R.style.Widget_Koonny_WheelView)
-            setData(mutableListOf("1", "2", "3"))
         }
 
     }
