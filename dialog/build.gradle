@@ -28,15 +28,19 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.google.android.material:material:1.8.0'
 }
 
 group = 'com.koonny.dialog'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.1-SNAPSHOT'
 
 publishing {
     publications {

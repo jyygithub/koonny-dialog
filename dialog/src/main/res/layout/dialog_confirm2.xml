@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ripple_background_round_20dp"
+    android:orientation="vertical"
+    android:padding="26dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发现新版本"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="云语日记有更新，将消耗1.25 MB流量。是否立即下载并安装？"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvPositive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ripple_tran_round_20dp"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:text="下载并安装"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvNegative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ripple_tran_round_20dp"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:text="稍后"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="16sp" />
+
+</LinearLayout>
